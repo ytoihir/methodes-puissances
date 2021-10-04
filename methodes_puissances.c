@@ -1,5 +1,11 @@
 #include <stdio.h>
-#include <stdlib.h>
+#include <pthread.h>
+#include <stdlib.h>		
+#include <time.h>	
+#include <string.h>		
+#include <unistd.h>		
+#include <semaphore.h>
+#include "stat.h"
 #include "methodes_puissances.h"
 
 #define NB_THREADS 0
@@ -9,7 +15,7 @@
  * ****************************************/
 
 COUPLE_VECT_VAL* donneesVectVal; // Données contenant le couple valeur propre vecteur
-int T_donneesVectVal=0; // Taille du pointeur donneesVectVal;
+int T_donneesVectVal=0; // Taille du pointeur donneesVectVal
 
 int tete_ecriture=0; 
 sem_t cases_occ, cases_lib; //nombre de cases occupées et nbr de cases libres
