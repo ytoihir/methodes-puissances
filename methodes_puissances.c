@@ -9,7 +9,7 @@
  * ****************************************/
 
 COUPLE_VECT_VAL* donneesVectVal; // Données contenant le couple valeur propre vecteur
-int T_donneesVectVal=0; // Taille du pointeur donneesModules
+int T_donneesVectVal=0; // Taille du pointeur donneesVectVal;
 
 int tete_ecriture=0; 
 sem_t cases_occ, cases_lib; //nombre de cases occupées et nbr de cases libres
