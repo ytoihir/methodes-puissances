@@ -20,21 +20,22 @@ COUPLE_VECT_VAL* donneesVectVal; // Données contenant le couple valeur propre v
  *  FONCTION PRINCIPALE
  * **********************/
 
-MATRICE_CARREE** allouer_matrice_carree(int taille) 
+MATRICE_CARREE allouer_matrice_carree(int taille) 
 {
-	MATRICE_CARREE** mat = NULL;
+	MATRICE_CARREE mat = NULL;
 	int i=0;
 	
-	mat =(MATRICE_CARREE**)malloc(taille*sizeof(int));
+	mat.taille = taille;
+	mat.tab_mat =(float**)malloc(taille*sizeof(float));
     for(i=0; i<taille; i++) 
     {
-        mat[i] = (MATRICE_CARREE*)malloc(taille*sizeof(int));
+        mat.tab_mat[i] = (float*)malloc(taille*sizeof(float));
     }
 
     return mat;
 }
 
-void remplir_matrice(MATRICE_CARREE** mat)
+void remplir_matrice(MATRICE_CARREE mat)
 {
     int i=0, j=0;
     
@@ -42,31 +43,31 @@ void remplir_matrice(MATRICE_CARREE** mat)
     {
         for(j=0; j<mat.taille; j++) 
         {
-            mat[i][j] = i+j;
+            mat.tab_mat[i][j] = i+j;
         }
     }
     return;
 }
 
-void afficher_matrice(MATRICE_CARREE** mat) 
+void afficher_matrice(MATRICE_CARREE mat) 
 {
 	int i=0, j=0;
     for(i=0; i<mat.taille; i++) 
     {
         for(j=0; j<mat.taille; j++) 
         {
-            printf("mat[%d][%d] = %d\n",i,j, mat[i][j]);
+            printf("mat.tab_mat[%d][%d] = %d\n",i,j, mat.tab_mat[i][j]);
         }
     }
     return;
 }
 
-void desallouer_matrice_carree(MATRICE_CARREE** * mat)
+void desallouer_matrice_carree(MATRICE_CARREE mat)
 {
 	for(int i=0; i<mat.taille; i++) {
-        free((*mat)[i]);
+        free(mat.tab_mat[i]);
     }
-    free(*mat);
-	*mat = NULL;
+    free(mat);
+	mat = NULL;
 	return;
 }
