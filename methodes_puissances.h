@@ -20,7 +20,7 @@ typedef struct COUPLE_VECT_VAL
 	float val_propre;
 }COUPLE_VECT_VAL;
 
-MATRICE_CARREE** allouer_matrice_carree(int taille);
+MATRICE_CARREE allouer_matrice_carree(int taille);
 void remplir_matrice(MATRICE_CARREE mat);
 void afficher_matrice(MATRICE_CARREE mat);
 void desallouer_matrice_carree(MATRICE_CARREE mat);
