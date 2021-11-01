@@ -14,7 +14,7 @@
  *  VARIABLES PARTAGEES ENTRE LES THREADS
  * ****************************************/
 
-COUPLE_VECT_VAL* donneesVectVal; // Données contenant le couple valeur propre vecteur
+COUPLE_VECT_VAL* donneesVectVal; //Données contenant le couple valeur propre vecteur
 
 /************************
  *  FONCTION PRINCIPALE
