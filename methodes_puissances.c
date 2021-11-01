@@ -17,6 +17,25 @@
 COUPLE_VECT_VAL* donneesVectVal; //Données contenant le couple valeur propre vecteur
 
 /************************
+ *  Fonction permettant de calculer la plus grande composante 
+ * **********************/
+
+float calculer_val_max_composante(VECTEUR vect) 
+{
+    int i;
+    float valMax=NULL;
+    if (vect.taille>0) valMax=vect.tab_vect[0];
+
+    for (i=1; i<vect.taille; i++) 
+    {
+        if (vect.tab_vect[i]>valMax)
+            valMax = vect.tab_vect[i]
+    }
+
+    return valMax;
+}
+
+/************************
  *  Fonction permettant de calculer le produit entre une matrice et un vecteur
  * **********************/
 
