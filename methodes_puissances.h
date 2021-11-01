@@ -11,7 +11,7 @@ typedef struct MATRICE_CARREE
 typedef struct VECTEUR 
 {
 	int taille;
-	float* vect;
+	float* tab_vect;
 }VECTEUR;
 
 typedef struct COUPLE_VECT_VAL

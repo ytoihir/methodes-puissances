@@ -20,9 +20,9 @@ COUPLE_VECT_VAL* donneesVectVal; //Données contenant le couple valeur propre ve
  *  FONCTION PRINCIPALE
  * **********************/
 
-VECTEUR multiplier_mat_vect(MATRICE_CARREE mat) 
+VECTEUR multiplier_mat_vect(MATRICE_CARREE mat, VECTEUR vect) 
 {
-
+    
 }
 
 MATRICE_CARREE allouer_matrice_carree(int taille) 
@@ -73,6 +73,5 @@ void desallouer_matrice_carree(MATRICE_CARREE mat)
         free(mat.tab_mat[i]);
     }
     free(mat);
-	mat = NULL;
 	return;
 }
