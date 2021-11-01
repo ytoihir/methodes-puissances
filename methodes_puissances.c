@@ -17,18 +17,36 @@
 COUPLE_VECT_VAL* donneesVectVal; //Données contenant le couple valeur propre vecteur
 
 /************************
- *  FONCTION PRINCIPALE
+ *  Fonction permettant de calculer le produit entre une matrice et un vecteur
  * **********************/
 
 VECTEUR multiplier_mat_vect(MATRICE_CARREE mat, VECTEUR vect) 
 {
-    
+    VECTEUR vectRes;
+    vectRes = (float*)malloc(taille*sizeof(float));
+    int i, j, resColonne;
+
+    for (i=0; i<mat.taille; i++) 
+    {
+        resColonne = 0;
+        for (j=0; j<mat.taille; j++) 
+        {
+            resColonne += mat.tab_mat[i][j]*vect.tab_vect[j];
+        }
+        vectRes[i]=resColonne;
+    }
+
+    return vectRes;
 }
+
+/************************
+ *  Fonction permettant d'allouer l'espace mémoire d'une matrice carrée
+ * **********************/
 
 MATRICE_CARREE allouer_matrice_carree(int taille) 
 {
 	MATRICE_CARREE mat = NULL;
-	int i=0;
+	int i;
 	
 	mat.taille = taille;
 	mat.tab_mat =(float**)malloc(taille*sizeof(float));
@@ -40,9 +58,13 @@ MATRICE_CARREE allouer_matrice_carree(int taille)
     return mat;
 }
 
+/************************
+ *  Fonction permettant de remplir une matrice
+ * **********************/
+
 void remplir_matrice(MATRICE_CARREE mat)
 {
-    int i=0, j=0;
+    int i, j;
     
     for(i=0; i<mat.taille; i++) 
     {
@@ -53,6 +75,10 @@ void remplir_matrice(MATRICE_CARREE mat)
     }
     return;
 }
+
+/************************
+ *  Fonction permettant d'afficher une matrice
+ * **********************/
 
 void afficher_matrice(MATRICE_CARREE mat) 
 {
@@ -66,6 +92,10 @@ void afficher_matrice(MATRICE_CARREE mat)
     }
     return;
 }
+
+/************************
+ *  Fonction permettant de désaouller l'espace mémoire d'une matrice carrée
+ * **********************/
 
 void desallouer_matrice_carree(MATRICE_CARREE mat)
 {
