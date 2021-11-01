@@ -8,7 +8,7 @@ typedef struct MATRICE_CARREE
 }MATRICE_CARREE;
 
 
-typedef struct VECTEUR 
+typedef struct VECTEUR
 {
 	int taille;
 	float* tab_vect;
@@ -26,5 +26,9 @@ void afficher_matrice(MATRICE_CARREE mat);
 void desallouer_matrice_carree(MATRICE_CARREE mat);
 VECTEUR multiplier_mat_vect(MATRICE_CARREE mat);
 float calculer_val_max_composante(VECTEUR vect);
+bool verif_convergence();
+bool tester_fct_verif_convergence();
+bool tester_fct_calculer_val_max();
+bool tester_fct_multiplier_mat_vect();
 
 #endif
