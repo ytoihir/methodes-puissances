@@ -1,5 +1,8 @@
 #ifndef METHODES_PUISSANCES_H
 #define METHODES_PUISSANCES_H
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 typedef struct MATRICE_CARREE
 {
