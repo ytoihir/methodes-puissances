@@ -9,6 +9,10 @@
 COUPLE_VECT_VAL* donneesVectVal; // Données contenant le couple valeur propre vecteur
 
 /************************************************************
+ *  Fonction de la méthode des puissances
+ * *********************************************************/
+
+/************************************************************
  *  Fonction permettant de calculer la plus grande composante
  * *********************************************************/
 
