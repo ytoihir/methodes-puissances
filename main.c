@@ -15,7 +15,8 @@ int main()
     afficher_matrice(mat);
     desallouer_matrice_carree(mat);*/
 
-	printf("Résultat du test de la fonction multiplier matxvect = %d", tester_fct_multiplier_mat_vect());
+	printf("Test de la fonction multiplier matxvect = %d\n", tester_fct_multiplier_mat_vect());
+    printf("Test de la fonction composante max = %d\n", tester_fct_calculer_val_max());
 
 	return 0;
 }

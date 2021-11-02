@@ -21,7 +21,7 @@ float calculer_val_max_composante(VECTEUR vect)
     for (i=1; i<vect.taille; i++)
     {
         if (vect.tab_vect[i]>valMax)
-            valMax = vect.tab_vect[i]
+            valMax = vect.tab_vect[i];
     }
 
     return valMax;
@@ -33,9 +33,23 @@ float calculer_val_max_composante(VECTEUR vect)
 
 bool tester_fct_calculer_val_max()
 {
-     
-}
+    VECTEUR vect;
+    float resAttendu, resObtenu;
 
+    vect.taille = 4;
+    vect.tab_vect = (float*)malloc(vect.taille*sizeof(float));
+    vect.tab_vect[0]=7;
+    vect.tab_vect[1]=8;
+    vect.tab_vect[2]=4;
+    vect.tab_vect[3]=7;
+
+    resAttendu = 8;
+
+    resObtenu = calculer_val_max_composante(vect);
+
+    if (resAttendu!=resObtenu) return false;
+    return true;
+}
 
 /*****************************************************************************
  *  Fonction permettant de calculer le produit entre une matrice et un vecteur
@@ -44,8 +58,10 @@ bool tester_fct_calculer_val_max()
 VECTEUR multiplier_mat_vect(MATRICE_CARREE mat, VECTEUR vect)
 {
     VECTEUR vectRes;
-    vectRes.tab_vect = (float*)malloc(mat.taille*sizeof(float));
     int i, j, resColonne;
+
+    vectRes.tab_vect = (float*)malloc(mat.taille*sizeof(float));
+    vectRes.taille = 0;
 
     for (i=0; i<mat.taille; i++)
     {
@@ -55,6 +71,7 @@ VECTEUR multiplier_mat_vect(MATRICE_CARREE mat, VECTEUR vect)
             resColonne += mat.tab_mat[i][j]*vect.tab_vect[j];
         }
         vectRes.tab_vect[i]=resColonne;
+        vectRes.taille++;
     }
 
     return vectRes;
@@ -67,33 +84,50 @@ VECTEUR multiplier_mat_vect(MATRICE_CARREE mat, VECTEUR vect)
 bool tester_fct_multiplier_mat_vect()
 {
     MATRICE_CARREE mat;
-    VECTEUR vect, vectResAttendu, vectResRecu;
+    VECTEUR vect, vectResAttendu, vectResObtenu;
     int i;
     bool memesVecteurs;
     memesVecteurs = true;
 
-    mat.taille = 10;
-    mat.tab_mat = 
-    {
-        {3, 0, 8, 8},
-        {2, 9, 1, 7},
-        {1, 3, 3, 3},
-        {1, 5, 0, 6},
-    };
+    mat = allouer_matrice_carree(4);
+    mat.tab_mat[0][0]=3;
+    mat.tab_mat[0][1]=0;
+    mat.tab_mat[0][2]=8;
+    mat.tab_mat[0][3]=8;
+    mat.tab_mat[1][0]=2;
+    mat.tab_mat[1][1]=9;
+    mat.tab_mat[1][2]=1;
+    mat.tab_mat[1][3]=7;
+    mat.tab_mat[2][0]=1;
+    mat.tab_mat[2][1]=3;
+    mat.tab_mat[2][2]=3;
+    mat.tab_mat[2][3]=3;
+    mat.tab_mat[3][0]=1;
+    mat.tab_mat[3][1]=5;
+    mat.tab_mat[3][2]=0;
+    mat.tab_mat[3][3]=6;
 
-    vect.taille = 10;
-    vect.tab_vect = {7, 8, 4, 7};
+    vect.taille = 4;
+    vect.tab_vect = (float*)malloc(vect.taille*sizeof(float));
+    vect.tab_vect[0]=7;
+    vect.tab_vect[1]=8;
+    vect.tab_vect[2]=4;
+    vect.tab_vect[3]=7;
 
-    vectResRecu.taille = 10;
-    vectResAttendu.tab_vect = {109, 139, 64, 89};
+    vectResAttendu.taille = 4;
+    vectResAttendu.tab_vect = (float*)malloc(vectResAttendu.taille*sizeof(float));
+    vectResAttendu.tab_vect[0]=109;
+    vectResAttendu.tab_vect[1]=139;
+    vectResAttendu.tab_vect[2]=64;
+    vectResAttendu.tab_vect[3]=89;
+    
+    vectResObtenu = multiplier_mat_vect(mat, vect);
 
-    vectResRecu = multiplier_mat_vect(mat, vect);
-
-    if (vectResAttendu.taille == vectResRecu.taille) 
+    if (vectResAttendu.taille == vectResObtenu.taille) 
     {
         for(i=0; i<vectResAttendu.taille; i++)
         {
-            if (vectResRecu.tab_vect[i]!=vectResAttendu.tab_vect[i])
+            if (vectResObtenu.tab_vect[i]!=vectResAttendu.tab_vect[i])
             {
                 memesVecteurs = false;
                 break;

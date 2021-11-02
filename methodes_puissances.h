@@ -27,7 +27,7 @@ MATRICE_CARREE allouer_matrice_carree(int taille);
 void remplir_matrice(MATRICE_CARREE mat);
 void afficher_matrice(MATRICE_CARREE mat);
 void desallouer_matrice_carree(MATRICE_CARREE mat);
-VECTEUR multiplier_mat_vect(MATRICE_CARREE mat);
+VECTEUR multiplier_mat_vect(MATRICE_CARREE mat, VECTEUR vect);
 float calculer_val_max_composante(VECTEUR vect);
 bool verif_convergence();
 bool tester_fct_verif_convergence();
