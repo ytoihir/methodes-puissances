@@ -349,7 +349,6 @@ bool tester_fct_multiplier_vect_scal()
     else memesVecteurs = false;
 
     return memesVecteurs;
-
 }
 
 /****************************************************************
