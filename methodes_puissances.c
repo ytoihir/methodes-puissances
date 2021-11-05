@@ -117,7 +117,7 @@ float methodes_puissances(MATRICE_CARREE mat, VECTEUR vect, int n)
     for (k=1; k<50; k++)
     {
         vectRes = multiplier_mat_vect(mat, vect)
-        vect.tab_vect =multiplier_vect_cst(vectRes, 1/m)
+        vect.tab_vect = multiplier_vect_cst(vectRes, 1/m)
         m = calculer_val_max_composante(vect)
     }
 
