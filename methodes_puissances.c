@@ -13,7 +13,7 @@ COUPLE_VECT_VAL* donneesVectVal; // Données contenant le couple valeur propre v
 
 /***********************************************************************
  *
- *                          LA PARTIE BASIQUE
+ *                          LA PARTIE UTILITAIRE
  *
  * ********************************************************************/
 
