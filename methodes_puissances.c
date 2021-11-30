@@ -103,6 +103,7 @@ void desallouer_matrice_carree(MATRICE_CARREE mat)
 float methodes_puissances(MATRICE_CARREE mat, VECTEUR vect, int n)
 {
     int k;
+    VECTEUR vectRes;
 
     // m : la composante de v de module maximum
     float m = 1;
@@ -111,14 +112,14 @@ float methodes_puissances(MATRICE_CARREE mat, VECTEUR vect, int n)
     vectRes.tab_vect = (float*)malloc(mat.taille*sizeof(float));
     vectRes.taille = vect.taille;
 
-    //initialisation
+    // initialisation
 
     // problème de convergence
     for (k=1; k<50; k++)
     {
-        vectRes = multiplier_mat_vect(mat, vect)
-        vect.tab_vect =multiplier_vect_cst(vectRes, 1/m)
-        m = calculer_val_max_composante(vect)
+        vectRes = multiplier_mat_vect(mat, vect);
+        vect = multiplier_vect_scal(vectRes, 1/m);
+        m = calculer_val_max_composante(vect);
     }
 
     return m;
@@ -174,24 +175,23 @@ VECTEUR multiplier_mat_vect(MATRICE_CARREE mat, VECTEUR vect)
  *  Fonction permettant d'effectuer la multiplication d'un vecteur par un scalaire
  * ******************************************************************************/
 
-VECTEUR multiplier_vect_scal(Vecteur vect, float scalaire)
+VECTEUR multiplier_vect_scal(VECTEUR vect, float scalaire)
 {
     VECTEUR vectRes;
     int i;
     float resColonne = 0;
 
-    vectRes.tab_vect = (float*)malloc(mat.taille*sizeof(float));
+    vectRes.tab_vect = (float*)malloc(vect.taille*sizeof(float));
     vectRes.taille = 0;
 
     for (i=0; i<vect.taille; i++)
     {
-        resColonne = vect.tab_vect[i] * constante
+        resColonne = vect.tab_vect[i] * scalaire;
         vectRes.tab_vect[i] = resColonne;
         vectRes.taille++;
     }
 
     return vectRes;
-
 }
 
 
@@ -303,7 +303,6 @@ bool tester_fct_multiplier_mat_vect()
     }
 
     else memesVecteurs = false;
-
     return memesVecteurs;
 }
 
@@ -331,8 +330,10 @@ bool tester_fct_multiplier_vect_scal()
     vectResAttendu.tab_vect = (float*)malloc(vectResAttendu.taille*sizeof(float));
     vectResAttendu.tab_vect[0]=21;
     vectResAttendu.tab_vect[1]=24;
-    vectResAttendu.tab_vect[2]=6;
-    vectResAttendu.tab_vect[3]=9;
+    vectResAttendu.tab_vect[2]=12;
+    vectResAttendu.tab_vect[3]=21;
+
+    vectResObtenu = multiplier_vect_scal(vect, scal);
 
     if (vectResAttendu.taille == vectResObtenu.taille)
     {
@@ -375,14 +376,13 @@ bool tester_fct_methodes_puissances()
     mat.tab_mat[2][1]=2;
     mat.tab_mat[2][2]=6;
 
-
     vect.taille = 3;
     vect.tab_vect = (float*)malloc(vect.taille*sizeof(float));
     vect.tab_vect[0]=1;
     vect.tab_vect[1]=0;
     vect.tab_vect[2]=0;
 
-    valeur_propre_obtenue = methodes_puissances(mat, vect, mat.taille)
+    valeur_propre_obtenue = methodes_puissances(mat, vect, mat.taille);
 
     if (valeur_propre_attendue!=valeur_propre_obtenue) return false;
     return true;

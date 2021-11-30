@@ -17,6 +17,7 @@ int main()
 
 	printf("Test de la fonction multiplier matxvect = %d\n", tester_fct_multiplier_mat_vect());
     printf("Test de la fonction composante max = %d\n", tester_fct_calculer_val_max());
-
+    printf("Test de la fonction multipler vectxscalaire = %d\n", tester_fct_multiplier_vect_scal());
+    //printf("Test de la fonction méthodes des puissances = %d\n", tester_fct_methodes_puissances());
 	return 0;
 }
