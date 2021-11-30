@@ -118,7 +118,7 @@ float methodes_puissances(MATRICE_CARREE mat, VECTEUR vect, int n)
     for (k=1; k<50; k++)
     {
         vectRes = multiplier_mat_vect(mat, vect);
-        vect = multiplier_vect_scal(vectRes, 1/m);
+        vectRes.tab_vect = multiplier_vect_cst(vectRes, 1/m);
         m = calculer_val_max_composante(vect);
     }
 
@@ -143,7 +143,6 @@ float calculer_val_max_composante(VECTEUR vect)
 
     return valMax;
 }
-
 
 /*****************************************************************************
  *  Fonction permettant de calculer le produit entre une matrice et un vecteur
