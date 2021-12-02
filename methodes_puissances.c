@@ -118,8 +118,9 @@ float methodes_puissances(MATRICE_CARREE mat, VECTEUR vect, int n)
     for (k=1; k<50; k++)
     {
         vectRes = multiplier_mat_vect(mat, vect);
-        vectRes.tab_vect = multiplier_vect_cst(vectRes, 1/m);
+        vectRes = multiplier_vect_scal(vectRes, 1/m);
         m = calculer_val_max_composante(vect);
+        vect = vectRes;
     }
 
     return m;
@@ -250,7 +251,7 @@ bool tester_fct_multiplier_mat_vect()
     VECTEUR vect;
     VECTEUR vectResAttendu;
     VECTEUR vectResObtenu;
-    bool memesVecteurs;
+    bool memesVecteurs = true;
 
     mat = allouer_matrice_carree(4);
     mat.tab_mat[0][0]=3;
