@@ -384,6 +384,8 @@ bool tester_fct_methodes_puissances()
     vect.tab_vect[2]=0;
 
     valeur_propre_obtenue = methodes_puissances(mat, vect, mat.taille);
+    
+    printf("val obt = %lf\n", valeur_propre_obtenue);
 
     if (valeur_propre_attendue!=valeur_propre_obtenue) return false;
     return true;
