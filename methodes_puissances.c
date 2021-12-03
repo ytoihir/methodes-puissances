@@ -42,18 +42,39 @@ MATRICE_CARREE allouer_matrice_carree(int taille)
  *  Fonction permettant de remplir une matrice
  * ******************************************/
 
-void remplir_matrice(MATRICE_CARREE mat)
+MATRICE_CARREE remplir_matrice(MATRICE_CARREE mat)
 {
     int i, j;
+    float nbr;
 
     for(i=0; i<mat.taille; i++)
     {
         for(j=0; j<mat.taille; j++)
         {
-            mat.tab_mat[i][j] = i+j;
+        	printf("Indice %d %d = ", i, j);
+        	scanf("%f", &nbr);
+            mat.tab_mat[i][j] = nbr;
         }
     }
-    return;
+    return mat;
+}
+
+/*********************************************
+ *  Fonction permettant de remplir un vecteur
+ * ******************************************/
+
+VECTEUR remplir_vecteur(VECTEUR vect)
+{
+    int i;
+    float nbr;
+
+    for(i=0; i<vect.taille; i++)
+    {
+    	printf("Indice %d = ", i);
+       	scanf("%f", &nbr);
+       	vect.tab_vect[i] = nbr;
+    }
+    return vect;
 }
 
 /*********************************************
@@ -71,7 +92,20 @@ void afficher_matrice(MATRICE_CARREE mat)
             printf("mat.tab_mat[%d][%d] = %lf\n",i,j, mat.tab_mat[i][j]);
         }
     }
-    return;
+}
+
+/*********************************************
+ *  Fonction permettant d'afficher un vecteur
+ * ******************************************/
+
+void afficher_vecteur(VECTEUR vect)
+{
+	int i;
+
+    for(i=0; i<vect.taille; i++)
+    {
+    	printf("vect.tab_vect[%d] = %lf\n",i, vect.tab_vect[i]);
+    }
 }
 
 /**************************************************************************

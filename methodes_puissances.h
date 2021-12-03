@@ -23,8 +23,10 @@ typedef struct COUPLE_VECT_VAL
 }COUPLE_VECT_VAL;
 
 MATRICE_CARREE allouer_matrice_carree(int taille);
-void remplir_matrice(MATRICE_CARREE mat);
+MATRICE_CARREE remplir_matrice(MATRICE_CARREE mat);
+VECTEUR remplir_vecteur(VECTEUR vect);
 void afficher_matrice(MATRICE_CARREE mat);
+void afficher_vecteur(VECTEUR vect);
 void desallouer_matrice_carree(MATRICE_CARREE mat);
 VECTEUR multiplier_mat_vect(MATRICE_CARREE mat, VECTEUR vect);
 float calculer_val_max_composante(VECTEUR vect);
