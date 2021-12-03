@@ -12,11 +12,14 @@ ISTY | IATIC 4 | 2021-2022
 ## Commandes
 
 ### Compiler le programme :
+```sh
 $ gcc main.c methodes_puissances.c -o main
-
+```
 
 ### Lancer le programme :
+```sh
 $ ./main
+```
 
 
 ## Avertissement
