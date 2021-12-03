@@ -68,7 +68,7 @@ void afficher_matrice(MATRICE_CARREE mat)
     {
         for(j=0; j<mat.taille; j++)
         {
-            printf("mat.tab_mat[%f][%f] = %f\n",i,j, mat.tab_mat[i][j]);
+            printf("mat.tab_mat[%d][%d] = %lf\n",i,j, mat.tab_mat[i][j]);
         }
     }
     return;
@@ -113,6 +113,7 @@ float methodes_puissances(MATRICE_CARREE mat, VECTEUR vect, int n)
     vectRes.taille = vect.taille;
 
     // initialisation
+    //vect = 
 
     // problème de convergence
     for (k=1; k<50; k++)
