@@ -113,15 +113,14 @@ float methodes_puissances(MATRICE_CARREE mat, VECTEUR vect, int n)
     vectRes.taille = vect.taille;
 
     // initialisation
-    //vect = 
 
     // problème de convergence
-    for (k=1; k<50; k++)
+    for (k=1; k<5; k++)
     {
         vectRes = multiplier_mat_vect(mat, vect);
         vectRes = multiplier_vect_scal(vectRes, 1/m);
-        m = calculer_val_max_composante(vect);
         vect = vectRes;
+        m = calculer_val_max_composante(vect);
     }
 
     return m;
@@ -385,8 +384,6 @@ bool tester_fct_methodes_puissances()
 
     valeur_propre_obtenue = methodes_puissances(mat, vect, mat.taille);
     
-    printf("val obt = %lf\n", valeur_propre_obtenue);
-
     if (valeur_propre_attendue!=valeur_propre_obtenue) return false;
     return true;
 }
