@@ -17,3 +17,6 @@ $ gcc main.c methodes_puissances.c -o main
 
 ### Lancer le programme :
 $ ./main
+
+
+## Avertissement
