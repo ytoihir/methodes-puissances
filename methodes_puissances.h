@@ -31,6 +31,8 @@ void desallouer_matrice_carree(MATRICE_CARREE mat);
 VECTEUR multiplier_mat_vect(MATRICE_CARREE mat, VECTEUR vect);
 float calculer_val_max_composante(VECTEUR vect);
 VECTEUR multiplier_vect_scal(VECTEUR vect, float scalaire);
+float methodes_puissances(MATRICE_CARREE mat, VECTEUR vect, int n);
+float methodes_puissances_parallele(MATRICE_CARREE mat, VECTEUR vect, int n);
 bool verif_convergence();
 bool tester_fct_verif_convergence();
 bool tester_fct_calculer_val_max();

@@ -421,3 +421,40 @@ bool tester_fct_methodes_puissances()
     if (valeur_propre_attendue!=valeur_propre_obtenue) return false;
     return true;
 }
+
+/***********************************************************************
+ *
+ *                          LA PARTIE PARALLELE
+ *
+ * ********************************************************************/
+
+
+/************************************************************
+ *  Fonction de la méthode des puissances
+ * *********************************************************/
+
+float methodes_puissances_parallele(MATRICE_CARREE mat, VECTEUR vect, int n)
+{
+    int k;
+    VECTEUR vectRes;
+
+    // m : la composante de v de module maximum
+    float m = 1;
+
+    // vectRes : vecteur resultant de la multiplication d'une matrice par un vecteur
+    vectRes.tab_vect = (float*)malloc(mat.taille*sizeof(float));
+    vectRes.taille = vect.taille;
+
+    // initialisation
+
+    // problème de convergence
+    for (k=1; k<5; k++)
+    {
+        vectRes = multiplier_mat_vect(mat, vect);
+        vectRes = multiplier_vect_scal(vectRes, 1/m);
+        vect = vectRes;
+        m = calculer_val_max_composante(vect);
+    }
+
+    return m;
+}
