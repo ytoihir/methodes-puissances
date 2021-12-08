@@ -1,4 +1,5 @@
 #include "methodes_puissances.h"
+#include <omp.h>
 
 #define NB_THREADS 0
 
@@ -432,8 +433,10 @@ bool tester_fct_methodes_puissances()
 /************************************************************
  *  Fonction de la méthode des puissances
  * *********************************************************/
+ 
+// Méthode 1
 
-float methodes_puissances_parallele(MATRICE_CARREE mat, VECTEUR vect, int n)
+float methodes_puissances_parallele_v1(MATRICE_CARREE mat, VECTEUR vect, int n)
 {
     int k;
     VECTEUR vectRes;
@@ -447,14 +450,51 @@ float methodes_puissances_parallele(MATRICE_CARREE mat, VECTEUR vect, int n)
 
     // initialisation
 
-    // problème de convergence
-    for (k=1; k<5; k++)
-    {
-        vectRes = multiplier_mat_vect(mat, vect);
-        vectRes = multiplier_vect_scal(vectRes, 1/m);
-        vect = vectRes;
-        m = calculer_val_max_composante(vect);
+	#pragma omp parallel
+	{
+		#pragma omp for schedule(static, 1)
+    	// problème de convergence
+    	for (k=1; k<5; k++)
+    	{
+        	vectRes = multiplier_mat_vect(mat, vect);
+        	vectRes = multiplier_vect_scal(vectRes, 1/m);
+        	vect = vectRes;
+        	m = calculer_val_max_composante(vect);
+    	}
     }
 
     return m;
 }
+
+// Méthode 2
+
+float methodes_puissances_parallele_v2(MATRICE_CARREE mat, VECTEUR vect, int n)
+{
+    int k;
+    VECTEUR vectRes;
+
+    // m : la composante de v de module maximum
+    float m = 1;
+
+    // vectRes : vecteur resultant de la multiplication d'une matrice par un vecteur
+    vectRes.tab_vect = (float*)malloc(mat.taille*sizeof(float));
+    vectRes.taille = vect.taille;
+
+    // initialisation
+
+	#pragma omp parallel
+	{
+		#pragma omp for
+    	// problème de convergence
+    	for (k=1; k<5; k++)
+    	{
+        	vectRes = multiplier_mat_vect(mat, vect);
+        	vectRes = multiplier_vect_scal(vectRes, 1/m);
+        	vect = vectRes;
+        	m = calculer_val_max_composante(vect);
+    	}
+    }
+
+    return m;
+}
+

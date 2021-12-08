@@ -39,5 +39,7 @@ bool tester_fct_calculer_val_max();
 bool tester_fct_multiplier_mat_vect();
 bool tester_fct_multiplier_vect_scal();
 bool tester_fct_methodes_puissances();
+float methodes_puissances_parallele_v1(MATRICE_CARREE mat, VECTEUR vect, int n);
+float methodes_puissances_parallele_v2(MATRICE_CARREE mat, VECTEUR vect, int n);
 
 #endif
