@@ -1,5 +1,6 @@
 #include "methodes_puissances.h"
 #include <omp.h>
+#include <math.h>
 
 #define NB_THREADS 0
 
@@ -18,8 +19,60 @@ COUPLE_VECT_VAL* donneesVectVal; // Données contenant le couple valeur propre v
  *
  * ********************************************************************/
 
+/***********************************************
+ *  Fonction permettant de normaliser un vecteur
+ * @param vecteur: vecteur à normaliser
+ * *********************************************/
 
-
+ float normaliser_vecteur(VECTEUR vect)
+ {
+	 float somme;
+	 int i;
+	 
+	 #pragma omp parallel for private(somme) schedule(dynamic, 1) reduction(somme, +)
+	 {
+		 for(i = 0; i < vect.taille; i++)
+		 {
+			 somme = somme + (vect[i] * vect[i]);
+		 }
+	 }
+	 
+	 return sqrt(somme);
+	 
+	 
+ }
+ 
+ /**********************************************
+ *  Fonction permettant d'initialiser un vecteur
+ * @param vecteur: vecteur initial
+ * ********************************************/
+ 
+ VECTEUR initialiser_vecteur(VECTEUR vect):
+ {
+	 int i;
+	 
+	 // vectRes : vecteur resultant de l'initialisation du vecteur initial vect
+	 VECTEUR vectRes;
+	
+	// normaliser le vecteur initial vect
+	float vectNormalise = normaliser_vecteur(vect);
+    
+    vectRes.tab_vect = (float*)malloc(vect.taille*sizeof(float));
+    vectRes.taille = vect.taille;
+	 
+	 
+	 #pragma omp parallel for schedule(dynamic, 1)
+	 {
+		 for(i = 0; i < vect.taille; i++)
+		 {
+			 vectRes[i] = vect[i] / vectNormalise;
+		 }
+	 }
+	 
+	 return vect;
+	 
+ }
+ 
 /**********************************************************************
  *  Fonction permettant d'allouer l'espace mémoire d'une matrice carrée
  * *******************************************************************/
@@ -137,6 +190,7 @@ void desallouer_matrice_carree(MATRICE_CARREE mat)
 
 float methodes_puissances(MATRICE_CARREE mat, VECTEUR vect, int n)
 {
+    int i;
     int k;
     VECTEUR vectRes;
 
@@ -148,6 +202,7 @@ float methodes_puissances(MATRICE_CARREE mat, VECTEUR vect, int n)
     vectRes.taille = vect.taille;
 
     // initialisation
+    vect = initialiser_vecteur(vect);
 
     // problème de convergence
     for (k=1; k<5; k++)
