@@ -262,12 +262,15 @@ VECTEUR multiplier_mat_vect_parallele(MATRICE_CARREE mat, VECTEUR vect)
     		for (i=0; i<mat.taille; i++)
     		{
         		resColonne = 0;
-        		for (j=0; j<mat.taille; j++)
+        		#pragma omp for schedule(static, 1)
         		{
-            		resColonne += mat.tab_mat[i][j]*vect.tab_vect[j];
+        			for (j=0; j<mat.taille; j++)
+        			{
+            			resColonne += mat.tab_mat[i][j]*vect.tab_vect[j];
+        			}
+        			vectRes.tab_vect[i] = resColonne;
+        			vectRes.taille++;
         		}
-        		vectRes.tab_vect[i] = resColonne;
-        		vectRes.taille++;
     		}
     	}
    	}
