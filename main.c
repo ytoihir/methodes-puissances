@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "methodes_puissances.h"
+#include "methodes_puissances_parallele.h"
 
 void menu()
 {
@@ -29,9 +29,9 @@ void menu()
 				switch(option2)
 				{
 					case 1:
-    					mat = allouer_matrice_carree(mat.taille);
-    					remplir_matrice(mat);
-    					afficher_matrice(mat);
+    					mat = allouer_matrice_carree_parallele(mat.taille);
+    					remplir_matrice_parallele(mat);
+    					afficher_matrice_parallele(mat);
     					break;
 
 					case 2:
@@ -62,8 +62,8 @@ void menu()
 					{
 						case 1:
 							vect.tab_vect = (float*)malloc(vect.taille*sizeof(float));
-    						remplir_vecteur(vect);
-    						afficher_vecteur(vect);
+    						remplir_vecteur_parallele(vect);
+    						afficher_vecteur_parallele(vect);
     						break;
 
     					case 2:
@@ -84,7 +84,7 @@ void menu()
 
 int main()
 {
-    FILE *f;
+    /*FILE *f;
 	int M, N, nz;
 	MM_typecode matcode;
 	int ret_code;
@@ -95,7 +95,7 @@ int main()
     menu();
 
 	fp = fopen ("file.txt", "w+");
-	/*
+	
     MATRICE_CARREE mat = NULL;
 
     printf("Veuillez entrer la taille de la matrice: ");
@@ -104,7 +104,7 @@ int main()
     mat = allouer_matrice_carree(taille);
     remplir_matrice(mat);
     afficher_matrice(mat);
-    desallouer_matrice_carree(mat);*/
+    desallouer_matrice_carree(mat);
    if (argc < 2)
 	{
 		fprintf(stderr, "Usage: %s [martix-market-filename]\n", argv[0]);
@@ -123,8 +123,8 @@ int main()
     }
 
 
-    /*  This is how one can screen matrix types if their application */
-    /*  only supports a subset of the Matrix Market data types.      */
+    // This is how one can screen matrix types if their application 
+    //  only supports a subset of the Matrix Market data types.      
 
     if (mm_is_complex(matcode) && mm_is_matrix(matcode) &&
             mm_is_sparse(matcode) )
@@ -134,29 +134,29 @@ int main()
         exit(1);
     }
 
-    /* find out size of sparse matrix .... */
+    // find out size of sparse matrix ....
 
     if ((ret_code = mm_read_mtx_crd_size(f, &M, &N, &nz)) !=0)
         exit(1);
 
 
-    /* reserve memory for matrices */
+    // reserve memory for matrices
 
     I = (int *) malloc(nz * sizeof(int));
     J = (int *) malloc(nz * sizeof(int));
     val = (double *) malloc(nz * sizeof(double));
 
 
-    /* NOTE: when reading in doubles, ANSI C requires the use of the "l"  */
-    /*   specifier as in "%lg", "%lf", "%le", otherwise errors will occur */
-    /*  (ANSI C X3.159-1989, Sec. 4.9.6.2, p. 136 lines 13-15)            */
+    // NOTE: when reading in doubles, ANSI C requires the use of the "l"  
+    //   specifier as in "%lg", "%lf", "%le", otherwise errors will occur 
+    //  (ANSI C X3.159-1989, Sec. 4.9.6.2, p. 136 lines 13-15)            
 
     for (i=0; i<nz; i++)
     {
         fscanf(f, "%d %d %lg\n", &I[i], &J[i], &val[i]);
         fprintf(fp, "%d %d %lg\n", I[i], J[i], val[i]);
         //fprintf(f, "%d %d %lg\n", &I[i], &J[i], &val[i]);
-        I[i]--;  /* adjust from 1-based to 0-based */
+        I[i]--;  // adjust from 1-based to 0-based
         J[i]--;
     }
 
@@ -169,15 +169,13 @@ int main()
 
 
     if (f !=stdin) fclose(f);
-    fclose(fp);
-    /*
+    fclose(fp);*/
+ 
 
-	printf("Test de la fonction multiplier matxvect = %d\n", tester_fct_multiplier_mat_vect());
-    printf("Test de la fonction composante max = %d\n", tester_fct_calculer_val_max());
-    printf("Test de la fonction multipler vectxscalaire = %d\n", tester_fct_multiplier_vect_scal());
-    printf("Test de la fonction méthodes des puissances = %d\n", tester_fct_methodes_puissances());
-
-	*/
+	printf("Test de la fonction multiplier matxvect = %d\n", tester_fct_multiplier_mat_vect_parallele());
+    printf("Test de la fonction composante max = %d\n", tester_fct_calculer_val_max_parallele());
+    printf("Test de la fonction multipler vectxscalaire = %d\n", tester_fct_multiplier_vect_scal_parallele());
+    printf("Test de la fonction méthodes des puissances = %d\n", tester_fct_methodes_puissances_parallele());
 
 	return 0;
 

@@ -1,4 +1,13 @@
-#include "methodes_puissances.h"
+#include "methodes_puissances_parallele.h"
+
+#define NB_THREADS 0
+
+/******************************************
+ *  VARIABLES PARTAGEES ENTRE LES THREADS
+ * ****************************************/
+
+COUPLE_VECT_VAL* donneesVectVal; // Données contenant le couple valeur propre vecteur
+
 
 /***********************************************************************
  *
@@ -11,7 +20,7 @@
  * @param vecteur: vecteur à normaliser
  * *********************************************/
 
- float normaliser_vecteur(VECTEUR vect)
+ float normaliser_vecteur_parallele(VECTEUR vect)
  {
 	 float somme;
 	 int i;
@@ -20,7 +29,7 @@
 	 {
 		 for(i = 0; i < vect.taille; i++)
 		 {
-			 somme = somme + (vect[i] * vect[i]);
+			 somme = somme + (vect.tab_vect[i] * vect.tab_vect[i]);
 		 }
 	 }
 	 
@@ -34,7 +43,7 @@
  * @param vecteur: vecteur initial
  * ********************************************/
  
- VECTEUR initialiser_vecteur(VECTEUR vect):
+ VECTEUR initialiser_vecteur_parallele(VECTEUR vect)
  {
 	 int i;
 	 
@@ -42,7 +51,7 @@
 	 VECTEUR vectRes;
 	
 	// normaliser le vecteur initial vect
-	float vectNormalise = normaliser_vecteur(vect);
+	float vectNormalise = normaliser_vecteur_parallele(vect);
     
     vectRes.tab_vect = (float*)malloc(vect.taille*sizeof(float));
     vectRes.taille = vect.taille;
@@ -52,7 +61,7 @@
 	 {
 		 for(i = 0; i < vect.taille; i++)
 		 {
-			 vectRes[i] = vect[i] / vectNormalise;
+			 vectRes.tab_vect[i] = vect.tab_vect[i] / vectNormalise;
 		 }
 	 }
 	 
@@ -64,7 +73,7 @@
  *  Fonction permettant d'allouer l'espace mémoire d'une matrice carrée
  * *******************************************************************/
 
-MATRICE_CARREE allouer_matrice_carree(int taille)
+MATRICE_CARREE allouer_matrice_carree_parallele(int taille)
 {
 	MATRICE_CARREE mat;
 	int i;
@@ -83,7 +92,7 @@ MATRICE_CARREE allouer_matrice_carree(int taille)
  *  Fonction permettant de remplir une matrice
  * ******************************************/
 
-MATRICE_CARREE remplir_matrice(MATRICE_CARREE mat)
+MATRICE_CARREE remplir_matrice_parallele(MATRICE_CARREE mat)
 {
     int i, j;
     float nbr;
@@ -104,7 +113,7 @@ MATRICE_CARREE remplir_matrice(MATRICE_CARREE mat)
  *  Fonction permettant de remplir un vecteur
  * ******************************************/
 
-VECTEUR remplir_vecteur(VECTEUR vect)
+VECTEUR remplir_vecteur_parallele(VECTEUR vect)
 {
     int i;
     float nbr;
@@ -122,7 +131,7 @@ VECTEUR remplir_vecteur(VECTEUR vect)
  *  Fonction permettant d'afficher une matrice
  * ******************************************/
 
-void afficher_matrice(MATRICE_CARREE mat)
+void afficher_matrice_parallele(MATRICE_CARREE mat)
 {
 	int i,j;
 
@@ -139,7 +148,7 @@ void afficher_matrice(MATRICE_CARREE mat)
  *  Fonction permettant d'afficher un vecteur
  * ******************************************/
 
-void afficher_vecteur(VECTEUR vect)
+void afficher_vecteur_parallele(VECTEUR vect)
 {
 	int i;
 
@@ -153,7 +162,7 @@ void afficher_vecteur(VECTEUR vect)
  *  Fonction permettant de désaouller l'espace mémoire d'une matrice carrée
  * ***********************************************************************/
 
-void desallouer_matrice_carree(MATRICE_CARREE mat)
+void desallouer_matrice_carree_parallele(MATRICE_CARREE mat)
 {
 	for(int i=0; i<mat.taille; i++) {
         free(mat.tab_mat[i]);
@@ -164,7 +173,7 @@ void desallouer_matrice_carree(MATRICE_CARREE mat)
 
 /***********************************************************************
  *
- *                          LA PARTIE SEQUENTIELLE
+ *                          LA PARTIE PARALLELE
  *
  * ********************************************************************/
 
@@ -172,10 +181,10 @@ void desallouer_matrice_carree(MATRICE_CARREE mat)
 /************************************************************
  *  Fonction de la méthode des puissances
  * *********************************************************/
-
-float methodes_puissances(MATRICE_CARREE mat, VECTEUR vect, int n)
+ 
+float methodes_puissances_parallele(MATRICE_CARREE mat, VECTEUR vect, int n)
 {
-    int i;
+	int i;
     int k;
     VECTEUR vectRes;
 
@@ -187,25 +196,30 @@ float methodes_puissances(MATRICE_CARREE mat, VECTEUR vect, int n)
     vectRes.taille = vect.taille;
 
     // initialisation
-    vect = initialiser_vecteur(vect);
+    vect = initialiser_vecteur_parallele(vect);
 
-    // problème de convergence
-    for (k=1; k<5; k++)
-    {
-        vectRes = multiplier_mat_vect(mat, vect);
-        vectRes = multiplier_vect_scal(vectRes, 1/m);
-        vect = vectRes;
-        m = calculer_val_max_composante(vect);
+	#pragma omp parallel
+	{
+		#pragma omp for schedule(static, 1)
+    	// problème de convergence
+    	for (k=1; k<5; k++)
+    	{
+        	vectRes = multiplier_mat_vect_parallele(mat, vect);
+        	vectRes = multiplier_vect_scal_parallele(vectRes, 1/m);
+        	vect = vectRes;
+        	m = calculer_val_max_composante_parallele(vect);
+    	}
     }
-
+    
     return m;
 }
+
 
 /************************************************************
  *  Fonction permettant de calculer la plus grande composante
  * *********************************************************/
 
-float calculer_val_max_composante(VECTEUR vect)
+float calculer_val_max_composante_parallele(VECTEUR vect)
 {
     int i;
     float valMax=-1;
@@ -224,7 +238,7 @@ float calculer_val_max_composante(VECTEUR vect)
  *  Fonction permettant de calculer le produit entre une matrice et un vecteur
  * **************************************************************************/
 
-VECTEUR multiplier_mat_vect(MATRICE_CARREE mat, VECTEUR vect)
+VECTEUR multiplier_mat_vect_parallele(MATRICE_CARREE mat, VECTEUR vect)
 {
     VECTEUR vectRes;
     int i, j, resColonne;
@@ -250,7 +264,7 @@ VECTEUR multiplier_mat_vect(MATRICE_CARREE mat, VECTEUR vect)
  *  Fonction permettant d'effectuer la multiplication d'un vecteur par un scalaire
  * ******************************************************************************/
 
-VECTEUR multiplier_vect_scal(VECTEUR vect, float scalaire)
+VECTEUR multiplier_vect_scal_parallele(VECTEUR vect, float scalaire)
 {
     VECTEUR vectRes;
     int i;
@@ -286,7 +300,7 @@ VECTEUR multiplier_vect_scal(VECTEUR vect, float scalaire)
 
 /***********************************************************************
  *
- *            FONCTIONS DE TESTS POUR LA PARTIE SEQUENTIELLE
+ *            FONCTIONS DE TESTS POUR LA PARTIE PARALLELE
  *
  * ********************************************************************/
 
@@ -295,7 +309,7 @@ VECTEUR multiplier_vect_scal(VECTEUR vect, float scalaire)
  *  Fonction permettant de tester la fonction calculer composante maximale
  * **********************************************************************/
 
-bool tester_fct_calculer_val_max()
+bool tester_fct_calculer_val_max_parallele()
 {
     VECTEUR vect;
     float resAttendu, resObtenu;
@@ -309,7 +323,7 @@ bool tester_fct_calculer_val_max()
 
     resAttendu = 8;
 
-    resObtenu = calculer_val_max_composante(vect);
+    resObtenu = calculer_val_max_composante_parallele(vect);
 
     if (resAttendu!=resObtenu) return false;
     return true;
@@ -319,7 +333,7 @@ bool tester_fct_calculer_val_max()
  *  Fonction permettant de tester la fonction multiplier matrice vecteur
  * ********************************************************************/
 
-bool tester_fct_multiplier_mat_vect()
+bool tester_fct_multiplier_mat_vect_parallele()
 {
     int i;
     MATRICE_CARREE mat;
@@ -328,7 +342,7 @@ bool tester_fct_multiplier_mat_vect()
     VECTEUR vectResObtenu;
     bool memesVecteurs = true;
 
-    mat = allouer_matrice_carree(4);
+    mat = allouer_matrice_carree_parallele(4);
     mat.tab_mat[0][0]=3;
     mat.tab_mat[0][1]=0;
     mat.tab_mat[0][2]=8;
@@ -363,7 +377,7 @@ bool tester_fct_multiplier_mat_vect()
     vectResAttendu.tab_vect[2]=64;
     vectResAttendu.tab_vect[3]=89;
 
-    vectResObtenu = multiplier_mat_vect(mat, vect);
+    vectResObtenu = multiplier_mat_vect_parallele(mat, vect);
 
     if (vectResAttendu.taille == vectResObtenu.taille)
     {
@@ -385,7 +399,7 @@ bool tester_fct_multiplier_mat_vect()
  *  Fonction permettant de tester la fonction multiplier un vecteur par un scalaire
  * *******************************************************************************/
 
-bool tester_fct_multiplier_vect_scal()
+bool tester_fct_multiplier_vect_scal_parallele()
 {
     int i;
     VECTEUR vect;
@@ -408,7 +422,7 @@ bool tester_fct_multiplier_vect_scal()
     vectResAttendu.tab_vect[2]=12;
     vectResAttendu.tab_vect[3]=21;
 
-    vectResObtenu = multiplier_vect_scal(vect, scal);
+    vectResObtenu = multiplier_vect_scal_parallele(vect, scal);
 
     if (vectResAttendu.taille == vectResObtenu.taille)
     {
@@ -431,14 +445,14 @@ bool tester_fct_multiplier_vect_scal()
  *  Fonction permettant de tester la fonction methodes puissances
  * *************************************************************/
 
-bool tester_fct_methodes_puissances()
+bool tester_fct_methodes_puissances_parallele()
 {
     MATRICE_CARREE mat;
     VECTEUR vect;
     float valeur_propre_attendue = 10;
     float valeur_propre_obtenue;
 
-    mat = allouer_matrice_carree(3);
+    mat = allouer_matrice_carree_parallele(3);
     mat.tab_mat[0][0]=10;
     mat.tab_mat[0][1]=0;
     mat.tab_mat[0][2]=0;
@@ -457,7 +471,7 @@ bool tester_fct_methodes_puissances()
     vect.tab_vect[1]=0;
     vect.tab_vect[2]=0;
 
-    valeur_propre_obtenue = methodes_puissances(mat, vect, mat.taille);
+    valeur_propre_obtenue = methodes_puissances_parallele(mat, vect, mat.taille);
     
     if (valeur_propre_attendue!=valeur_propre_obtenue) return false;
     return true;

@@ -3,6 +3,8 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
+#include <omp.h>
 
 typedef struct MATRICE_CARREE
 {
@@ -33,14 +35,11 @@ VECTEUR multiplier_mat_vect(MATRICE_CARREE mat, VECTEUR vect);
 float calculer_val_max_composante(VECTEUR vect);
 VECTEUR multiplier_vect_scal(VECTEUR vect, float scalaire);
 float methodes_puissances(MATRICE_CARREE mat, VECTEUR vect, int n);
-float methodes_puissances_parallele(MATRICE_CARREE mat, VECTEUR vect, int n);
 bool verif_convergence();
 bool tester_fct_verif_convergence();
 bool tester_fct_calculer_val_max();
 bool tester_fct_multiplier_mat_vect();
 bool tester_fct_multiplier_vect_scal();
 bool tester_fct_methodes_puissances();
-float methodes_puissances_parallele_v1(MATRICE_CARREE mat, VECTEUR vect, int n);
-float methodes_puissances_parallele_v2(MATRICE_CARREE mat, VECTEUR vect, int n);
 
 #endif
