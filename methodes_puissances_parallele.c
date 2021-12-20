@@ -80,9 +80,12 @@ MATRICE_CARREE allouer_matrice_carree_parallele(int taille)
 
 	mat.taille = taille;
 	mat.tab_mat =(float**)malloc(taille*sizeof(float));
-    for(i=0; i<taille; i++)
-    {
-        mat.tab_mat[i] = (float*)malloc(taille*sizeof(float));
+	#pragma omp parallel for schedule(static, 1)
+	{
+    	for(i=0; i<taille; i++)
+    	{
+        	mat.tab_mat[i] = (float*)malloc(taille*sizeof(float));
+    	}
     }
 
     return mat;
@@ -164,8 +167,11 @@ void afficher_vecteur_parallele(VECTEUR vect)
 
 void desallouer_matrice_carree_parallele(MATRICE_CARREE mat)
 {
-	for(int i=0; i<mat.taille; i++) {
-        free(mat.tab_mat[i]);
+	#pragma omp parallel for schedule(dynamic, 1)
+	{
+		for(int i=0; i<mat.taille; i++) {
+        	free(mat.tab_mat[i]);
+    	}
     }
     free(mat.tab_mat);
 	return;
@@ -225,10 +231,13 @@ float calculer_val_max_composante_parallele(VECTEUR vect)
     float valMax=-1;
     if (vect.taille>0) valMax=vect.tab_vect[0];
 
-    for (i=1; i<vect.taille; i++)
+	#pragma omp parallel for schedule(dynamic, 1)
     {
-        if (vect.tab_vect[i]>valMax)
-            valMax = vect.tab_vect[i];
+    	for (i=1; i<vect.taille; i++)
+    	{
+        	if (vect.tab_vect[i]>valMax)
+            	valMax = vect.tab_vect[i];
+    	}
     }
 
     return valMax;
@@ -246,16 +255,22 @@ VECTEUR multiplier_mat_vect_parallele(MATRICE_CARREE mat, VECTEUR vect)
     vectRes.tab_vect = (float*)malloc(mat.taille*sizeof(float));
     vectRes.taille = 0;
 
-    for (i=0; i<mat.taille; i++)
-    {
-        resColonne = 0;
-        for (j=0; j<mat.taille; j++)
-        {
-            resColonne += mat.tab_mat[i][j]*vect.tab_vect[j];
-        }
-        vectRes.tab_vect[i] = resColonne;
-        vectRes.taille++;
-    }
+	#pragma omp parallel 
+	{
+		#pragma omp for schedule(static, 1)
+		{
+    		for (i=0; i<mat.taille; i++)
+    		{
+        		resColonne = 0;
+        		for (j=0; j<mat.taille; j++)
+        		{
+            		resColonne += mat.tab_mat[i][j]*vect.tab_vect[j];
+        		}
+        		vectRes.tab_vect[i] = resColonne;
+        		vectRes.taille++;
+    		}
+    	}
+   	}
 
     return vectRes;
 }
@@ -273,11 +288,14 @@ VECTEUR multiplier_vect_scal_parallele(VECTEUR vect, float scalaire)
     vectRes.tab_vect = (float*)malloc(vect.taille*sizeof(float));
     vectRes.taille = 0;
 
-    for (i=0; i<vect.taille; i++)
-    {
-        resColonne = vect.tab_vect[i] * scalaire;
-        vectRes.tab_vect[i] = resColonne;
-        vectRes.taille++;
+	#pragma omp parallel for schedule(dynamic, 1)
+	{
+    	for (i=0; i<vect.taille; i++)
+    	{
+        	resColonne = vect.tab_vect[i] * scalaire;
+        	vectRes.tab_vect[i] = resColonne;
+        	vectRes.taille++;
+    	}
     }
 
     return vectRes;
