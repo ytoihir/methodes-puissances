@@ -291,7 +291,7 @@ VECTEUR multiplier_vect_scal_parallele(VECTEUR vect, float scalaire)
     vectRes.tab_vect = (float*)malloc(vect.taille*sizeof(float));
     vectRes.taille = 0;
 
-	#pragma omp parallel for schedule(dynamic, 1)
+	#pragma omp parallel for schedule(dynamic, 1) reduction(+: vectRes.taille)
 	{
     	for (i=0; i<vect.taille; i++)
     	{
