@@ -22,8 +22,14 @@ COUPLE_VECT_VAL* donneesVectVal; // Données contenant le couple valeur propre v
  
 float generer_nombre_aleatoire()
 {
+	// nombre aléatoire généré
+	float nbr;
 	
+	scrand(time(NULL));
+	nbr = rand() % 400 + 1;
 	
+	return nbr;
+	 
 }
 
 
@@ -105,7 +111,7 @@ MATRICE_CARREE allouer_matrice_carree_parallele(int taille)
 }
 
 /*********************************************
- *  Fonction permettant de remplir une matrice
+ *  Fonction permettant de remplir une matrice 
  * ******************************************/
 
 MATRICE_CARREE remplir_matrice_parallele(MATRICE_CARREE mat)
@@ -117,17 +123,17 @@ MATRICE_CARREE remplir_matrice_parallele(MATRICE_CARREE mat)
     {
         for(j=0; j<mat.taille; j++)
         {
-        	printf("Indice %d %d = ", i, j);
-        	scanf("%f", &nbr);
+			printf("Indice %d = ", i);
+			scanf("%f", &nbr);
             mat.tab_mat[i][j] = nbr;
         }
     }
     return mat;
 }
 
-/*********************************************
+/********************************************
  *  Fonction permettant de remplir un vecteur
- * ******************************************/
+ * *****************************************/
 
 VECTEUR remplir_vecteur_parallele(VECTEUR vect)
 {
@@ -140,6 +146,41 @@ VECTEUR remplir_vecteur_parallele(VECTEUR vect)
        	scanf("%f", &nbr);
        	vect.tab_vect[i] = nbr;
     }
+    return vect;
+}
+
+/***********************************************************
+ *  Fonction permettant de remplir une matrice aléatoirement
+ * ********************************************************/
+
+MATRICE_CARREE generer_matrice_aleatoire(MATRICE_CARREE mat)
+{
+    int i, j;
+
+    for(i=0; i<mat.taille; i++)
+    {
+        for(j=0; j<mat.taille; j++)
+        {
+            mat.tab_mat[i][j] = generer_nombre_aleatoire();
+        }
+    }
+    
+    return mat;
+}
+
+/**********************************************************
+ *  Fonction permettant de remplir un vecteur aléatoirement
+ * *******************************************************/
+
+VECTEUR generer_vecteur_aleatoire(VECTEUR vect)
+{
+    int i;
+
+    for(i=0; i<vect.taille; i++)
+    {
+       	vect.tab_vect[i] = generer_nombre_aleatoire();
+    }
+    
     return vect;
 }
 

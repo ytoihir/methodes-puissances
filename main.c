@@ -22,7 +22,7 @@ void menu()
 				printf("Donnez une taille à la matrice : ");
 				scanf("%d", &mat.taille);
 				printf("1) Remplir la matrice manuellement\n");
-				printf("2) Remplir la matrice à l'aide de MatrixMarket\n");
+				printf("2) Remplir la matrice aléatoirement\n");
 				printf("Appuyez sur n'importe quelle touche pour retourner à l'étape précédente\n");
 				printf("Choissisez une option : ");
 				scanf("%d", &option2);
@@ -100,7 +100,7 @@ void plot graphe(float res)
 		end = clock();
 			
 		tim[i] = ((double)(end-start));
-		printf("%li, %li", (long int)NB_THREADS, (long int)tim);
+		printf("%li, %li, %li", (long int)NB_THREADS, (long int)tim, (long int)res);
 		
 		NB_THREADS += 100
 	}

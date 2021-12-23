@@ -28,6 +28,8 @@ typedef struct COUPLE_VECT_VAL
 MATRICE_CARREE allouer_matrice_carree_parallele(int taille);
 MATRICE_CARREE remplir_matrice_parallele(MATRICE_CARREE mat);
 VECTEUR remplir_vecteur_parallele(VECTEUR vect);
+MATRICE_CARREE generer_matrice_aleatoire(MATRICE_CARREE mat);
+VECTEUR generer_vecteur_aleatoire(VECTEUR vect);
 void afficher_matrice_parallele(MATRICE_CARREE mat);
 void afficher_vecteur_parallele(VECTEUR vect);
 void desallouer_matrice_carree_parallele(MATRICE_CARREE mat);
