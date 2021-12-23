@@ -1,10 +1,38 @@
 #include "methodes_puissances.h"
+#include <time.h>
+
+#define NB_THREADS 0
+
+/******************************************
+ *  VARIABLES PARTAGEES ENTRE LES THREADS
+ * ****************************************/
+
+COUPLE_VECT_VAL* donneesVectVal; // Données contenant le couple valeur propre vecteur
+
 
 /***********************************************************************
  *
  *                          LA PARTIE UTILITAIRE
  *
  * ********************************************************************/
+
+/*****************************************************
+ *  Fonction permettant de générer un nombre aléatoire
+ * **************************************************/
+ 
+float generer_nombre_aleatoire()
+{
+	// nombre aléatoire généré
+	float nbr;
+	
+	srand(time(NULL));
+	nbr = rand() % 400 + 1;
+	
+	return nbr;
+	 
+}
+
+
 
 /***********************************************
  *  Fonction permettant de normaliser un vecteur
@@ -20,7 +48,7 @@
 	 {
 		 for(i = 0; i < vect.taille; i++)
 		 {
-			 somme = somme + (vect[i] * vect[i]);
+			 somme = somme + (vect.tab_vect[i] * vect.tab_vect[i]);
 		 }
 	 }
 	 
@@ -34,7 +62,7 @@
  * @param vecteur: vecteur initial
  * ********************************************/
  
- VECTEUR initialiser_vecteur(VECTEUR vect):
+ VECTEUR initialiser_vecteur(VECTEUR vect)
  {
 	 int i;
 	 
@@ -52,7 +80,7 @@
 	 {
 		 for(i = 0; i < vect.taille; i++)
 		 {
-			 vectRes[i] = vect[i] / vectNormalise;
+			 vectRes.tab_vect[i] = vect.tab_vect[i] / vectNormalise;
 		 }
 	 }
 	 
@@ -71,16 +99,19 @@ MATRICE_CARREE allouer_matrice_carree(int taille)
 
 	mat.taille = taille;
 	mat.tab_mat =(float**)malloc(taille*sizeof(float));
-    for(i=0; i<taille; i++)
-    {
-        mat.tab_mat[i] = (float*)malloc(taille*sizeof(float));
+	#pragma omp parallel for schedule(static, 1)
+	{
+    	for(i=0; i<taille; i++)
+    	{
+        	mat.tab_mat[i] = (float*)malloc(taille*sizeof(float));
+    	}
     }
 
     return mat;
 }
 
 /*********************************************
- *  Fonction permettant de remplir une matrice
+ *  Fonction permettant de remplir une matrice 
  * ******************************************/
 
 MATRICE_CARREE remplir_matrice(MATRICE_CARREE mat)
@@ -92,17 +123,17 @@ MATRICE_CARREE remplir_matrice(MATRICE_CARREE mat)
     {
         for(j=0; j<mat.taille; j++)
         {
-        	printf("Indice %d %d = ", i, j);
-        	scanf("%f", &nbr);
+			printf("Indice %d = ", i);
+			scanf("%f", &nbr);
             mat.tab_mat[i][j] = nbr;
         }
     }
     return mat;
 }
 
-/*********************************************
+/********************************************
  *  Fonction permettant de remplir un vecteur
- * ******************************************/
+ * *****************************************/
 
 VECTEUR remplir_vecteur(VECTEUR vect)
 {
@@ -115,6 +146,41 @@ VECTEUR remplir_vecteur(VECTEUR vect)
        	scanf("%f", &nbr);
        	vect.tab_vect[i] = nbr;
     }
+    return vect;
+}
+
+/***********************************************************
+ *  Fonction permettant de remplir une matrice aléatoirement
+ * ********************************************************/
+
+MATRICE_CARREE generer_matrice_aleatoire(MATRICE_CARREE mat)
+{
+    int i, j;
+
+    for(i=0; i<mat.taille; i++)
+    {
+        for(j=0; j<mat.taille; j++)
+        {
+            mat.tab_mat[i][j] = generer_nombre_aleatoire();
+        }
+    }
+    
+    return mat;
+}
+
+/**********************************************************
+ *  Fonction permettant de remplir un vecteur aléatoirement
+ * *******************************************************/
+
+VECTEUR generer_vecteur_aleatoire(VECTEUR vect)
+{
+    int i;
+
+    for(i=0; i<vect.taille; i++)
+    {
+       	vect.tab_vect[i] = generer_nombre_aleatoire();
+    }
+    
     return vect;
 }
 
@@ -155,8 +221,11 @@ void afficher_vecteur(VECTEUR vect)
 
 void desallouer_matrice_carree(MATRICE_CARREE mat)
 {
-	for(int i=0; i<mat.taille; i++) {
-        free(mat.tab_mat[i]);
+	#pragma omp parallel for schedule(dynamic, 1)
+	{
+		for(int i=0; i<mat.taille; i++) {
+        	free(mat.tab_mat[i]);
+    	}
     }
     free(mat.tab_mat);
 	return;
@@ -164,7 +233,7 @@ void desallouer_matrice_carree(MATRICE_CARREE mat)
 
 /***********************************************************************
  *
- *                          LA PARTIE SEQUENTIELLE
+ *                          LA PARTIE PARALLELE
  *
  * ********************************************************************/
 
@@ -172,10 +241,10 @@ void desallouer_matrice_carree(MATRICE_CARREE mat)
 /************************************************************
  *  Fonction de la méthode des puissances
  * *********************************************************/
-
+ 
 float methodes_puissances(MATRICE_CARREE mat, VECTEUR vect, int n)
 {
-    int i;
+	int i;
     int k;
     VECTEUR vectRes;
 
@@ -189,17 +258,22 @@ float methodes_puissances(MATRICE_CARREE mat, VECTEUR vect, int n)
     // initialisation
     vect = initialiser_vecteur(vect);
 
-    // problème de convergence
-    for (k=1; k<5; k++)
-    {
-        vectRes = multiplier_mat_vect(mat, vect);
-        vectRes = multiplier_vect_scal(vectRes, 1/m);
-        vect = vectRes;
-        m = calculer_val_max_composante(vect);
+	#pragma omp parallel
+	{
+		#pragma omp for schedule(static, 1)
+    	// problème de convergence
+    	for (k=1; k<5; k++)
+    	{
+        	vectRes = multiplier_mat_vect(mat, vect);
+        	vectRes = multiplier_vect_scal(vectRes, 1/m);
+        	vect = vectRes;
+        	m = calculer_val_max_composante(vect);
+    	}
     }
-
+    
     return m;
 }
+
 
 /************************************************************
  *  Fonction permettant de calculer la plus grande composante
@@ -211,10 +285,13 @@ float calculer_val_max_composante(VECTEUR vect)
     float valMax=-1;
     if (vect.taille>0) valMax=vect.tab_vect[0];
 
-    for (i=1; i<vect.taille; i++)
+	#pragma omp parallel for schedule(dynamic, 1)
     {
-        if (vect.tab_vect[i]>valMax)
-            valMax = vect.tab_vect[i];
+    	for (i=1; i<vect.taille; i++)
+    	{
+        	if (vect.tab_vect[i]>valMax)
+            	valMax = vect.tab_vect[i];
+    	}
     }
 
     return valMax;
@@ -232,16 +309,25 @@ VECTEUR multiplier_mat_vect(MATRICE_CARREE mat, VECTEUR vect)
     vectRes.tab_vect = (float*)malloc(mat.taille*sizeof(float));
     vectRes.taille = 0;
 
-    for (i=0; i<mat.taille; i++)
-    {
-        resColonne = 0;
-        for (j=0; j<mat.taille; j++)
-        {
-            resColonne += mat.tab_mat[i][j]*vect.tab_vect[j];
-        }
-        vectRes.tab_vect[i] = resColonne;
-        vectRes.taille++;
-    }
+	#pragma omp parallel 
+	{
+		#pragma omp for schedule(static, 1)
+		{
+    		for (i=0; i<mat.taille; i++)
+    		{
+        		resColonne = 0;
+        		#pragma omp for schedule(static, 1)
+        		{
+        			for (j=0; j<mat.taille; j++)
+        			{
+            			resColonne += mat.tab_mat[i][j]*vect.tab_vect[j];
+        			}
+        			vectRes.tab_vect[i] = resColonne;
+        			vectRes.taille++;
+        		}
+    		}
+    	}
+   	}
 
     return vectRes;
 }
@@ -259,11 +345,14 @@ VECTEUR multiplier_vect_scal(VECTEUR vect, float scalaire)
     vectRes.tab_vect = (float*)malloc(vect.taille*sizeof(float));
     vectRes.taille = 0;
 
-    for (i=0; i<vect.taille; i++)
-    {
-        resColonne = vect.tab_vect[i] * scalaire;
-        vectRes.tab_vect[i] = resColonne;
-        vectRes.taille++;
+	#pragma omp parallel for schedule(dynamic, 1) reduction(+: vectRes.taille)
+	{
+    	for (i=0; i<vect.taille; i++)
+    	{
+        	resColonne = vect.tab_vect[i] * scalaire;
+        	vectRes.tab_vect[i] = resColonne;
+        	vectRes.taille++;
+    	}
     }
 
     return vectRes;
@@ -286,7 +375,7 @@ VECTEUR multiplier_vect_scal(VECTEUR vect, float scalaire)
 
 /***********************************************************************
  *
- *            FONCTIONS DE TESTS POUR LA PARTIE SEQUENTIELLE
+ *            FONCTIONS DE TESTS POUR LA PARTIE PARALLELE
  *
  * ********************************************************************/
 

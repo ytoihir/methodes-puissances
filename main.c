@@ -1,5 +1,6 @@
-#include <stdio.h>
-#include "methodes_puissances_parallele.h"
+#include "methodes_puissances.h"
+
+long int NB_THREADS = 2;
 
 void menu()
 {
@@ -29,9 +30,9 @@ void menu()
 				switch(option2)
 				{
 					case 1:
-    					mat = allouer_matrice_carree_parallele(mat.taille);
-    					remplir_matrice_parallele(mat);
-    					afficher_matrice_parallele(mat);
+    					mat = allouer_matrice_carree(mat.taille);
+    					remplir_matrice(mat);
+    					afficher_matrice(mat);
     					break;
 
 					case 2:
@@ -62,8 +63,8 @@ void menu()
 					{
 						case 1:
 							vect.tab_vect = (float*)malloc(vect.taille*sizeof(float));
-    						remplir_vecteur_parallele(vect);
-    						afficher_vecteur_parallele(vect);
+    						remplir_vecteur(vect);
+    						afficher_vecteur(vect);
     						break;
 
     					case 2:
@@ -87,7 +88,7 @@ void menu()
  * @param es : le resultat de la fct methodes_puissances
  * ****************************************************/
 
-void plot graphe(float res)
+void plot_graphe(float res)
 {
 	int i = 0;
 	double tim[40];
@@ -102,19 +103,17 @@ void plot graphe(float res)
 		tim[i] = ((double)(end-start));
 		printf("%li, %li, %li", (long int)NB_THREADS, (long int)tim, (long int)res);
 		
-		NB_THREADS += 100
-	}
-	
-	
+		NB_THREADS += 100;
+	}	
 }
 
 int main()
 {
 
-	printf("Test de la fonction multiplier matxvect = %d\n", tester_fct_multiplier_mat_vect_parallele());
-    printf("Test de la fonction composante max = %d\n", tester_fct_calculer_val_max_parallele());
-    printf("Test de la fonction multipler vectxscalaire = %d\n", tester_fct_multiplier_vect_scal_parallele());
-    printf("Test de la fonction méthodes des puissances = %d\n", tester_fct_methodes_puissances_parallele());
+	printf("Test de la fonction multiplier matxvect = %d\n", tester_fct_multiplier_mat_vect());
+    printf("Test de la fonction composante max = %d\n", tester_fct_calculer_val_max());
+    printf("Test de la fonction multipler vectxscalaire = %d\n", tester_fct_multiplier_vect_scal());
+    printf("Test de la fonction méthodes des puissances = %d\n", tester_fct_methodes_puissances());
 
 	return 0;
 

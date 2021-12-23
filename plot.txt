@@ -1,0 +1,4 @@
+Test de la fonction multiplier matxvect = 1
+Test de la fonction composante max = 1
+Test de la fonction multipler vectxscalaire = 1
+Test de la fonction méthodes des puissances = 1
