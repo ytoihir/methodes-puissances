@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <omp.h>
+#include <time.h>
 
 typedef struct MATRICE_CARREE
 {

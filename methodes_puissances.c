@@ -1,7 +1,4 @@
 #include "methodes_puissances.h"
-#include <time.h>
-
-#define NB_THREADS 0
 
 /******************************************
  *  VARIABLES PARTAGEES ENTRE LES THREADS

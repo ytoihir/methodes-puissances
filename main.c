@@ -97,7 +97,7 @@ void plot_graphe(float res)
 	while (i < 40)
 	{
 		start = clock();
-		float res = res
+		float res = res;
 		end = clock();
 			
 		tim[i] = ((double)(end-start));
