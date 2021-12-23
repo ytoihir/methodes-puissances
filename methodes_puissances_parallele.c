@@ -1,4 +1,5 @@
 #include "methodes_puissances_parallele.h"
+#include <time.h>
 
 #define NB_THREADS 0
 
@@ -14,6 +15,18 @@ COUPLE_VECT_VAL* donneesVectVal; // Données contenant le couple valeur propre v
  *                          LA PARTIE UTILITAIRE
  *
  * ********************************************************************/
+
+/*****************************************************
+ *  Fonction permettant de générer un nombre aléatoire
+ * **************************************************/
+ 
+float generer_nombre_aleatoire()
+{
+	
+	
+}
+
+
 
 /***********************************************
  *  Fonction permettant de normaliser un vecteur

@@ -82,95 +82,34 @@ void menu()
 
 }
 
+/*******************************************************
+ *  Fonction permettant de mesurer la performance
+ * @param es : le resultat de la fct methodes_puissances
+ * ****************************************************/
+
+void plot graphe(float res)
+{
+	int i = 0;
+	double tim[40];
+	clock_t start, end;
+	
+	while (i < 40)
+	{
+		start = clock();
+		float res = res
+		end = clock();
+			
+		tim[i] = ((double)(end-start));
+		printf("%li, %li", (long int)NB_THREADS, (long int)tim);
+		
+		NB_THREADS += 100
+	}
+	
+	
+}
+
 int main()
 {
-    /*FILE *f;
-	int M, N, nz;
-	MM_typecode matcode;
-	int ret_code;
-	int i, *I, *J;
-    double *val;
-    FILE * fp;
-
-    menu();
-
-	fp = fopen ("file.txt", "w+");
-	
-    MATRICE_CARREE mat = NULL;
-
-    printf("Veuillez entrer la taille de la matrice: ");
-    scanf("%d",mat.taille);
-
-    mat = allouer_matrice_carree(taille);
-    remplir_matrice(mat);
-    afficher_matrice(mat);
-    desallouer_matrice_carree(mat);
-   if (argc < 2)
-	{
-		fprintf(stderr, "Usage: %s [martix-market-filename]\n", argv[0]);
-		exit(1);
-	}
-    else
-    {
-        if ((f = fopen(argv[1], "r")) == NULL)
-            exit(1);
-    }
-
-    if (mm_read_banner(f, &matcode) != 0)
-    {
-        printf("Could not process Matrix Market banner.\n");
-        exit(1);
-    }
-
-
-    // This is how one can screen matrix types if their application 
-    //  only supports a subset of the Matrix Market data types.      
-
-    if (mm_is_complex(matcode) && mm_is_matrix(matcode) &&
-            mm_is_sparse(matcode) )
-    {
-        printf("Sorry, this application does not support ");
-        printf("Market Market type: [%s]\n", mm_typecode_to_str(matcode));
-        exit(1);
-    }
-
-    // find out size of sparse matrix ....
-
-    if ((ret_code = mm_read_mtx_crd_size(f, &M, &N, &nz)) !=0)
-        exit(1);
-
-
-    // reserve memory for matrices
-
-    I = (int *) malloc(nz * sizeof(int));
-    J = (int *) malloc(nz * sizeof(int));
-    val = (double *) malloc(nz * sizeof(double));
-
-
-    // NOTE: when reading in doubles, ANSI C requires the use of the "l"  
-    //   specifier as in "%lg", "%lf", "%le", otherwise errors will occur 
-    //  (ANSI C X3.159-1989, Sec. 4.9.6.2, p. 136 lines 13-15)            
-
-    for (i=0; i<nz; i++)
-    {
-        fscanf(f, "%d %d %lg\n", &I[i], &J[i], &val[i]);
-        fprintf(fp, "%d %d %lg\n", I[i], J[i], val[i]);
-        //fprintf(f, "%d %d %lg\n", &I[i], &J[i], &val[i]);
-        I[i]--;  // adjust from 1-based to 0-based
-        J[i]--;
-    }
-
-
-    for (i=0; i<nz; i++)
-    {
-        printf("mat[%d][%d]: %lg\n", I[i], J[i], val[i]);
-    }
-
-
-
-    if (f !=stdin) fclose(f);
-    fclose(fp);*/
- 
 
 	printf("Test de la fonction multiplier matxvect = %d\n", tester_fct_multiplier_mat_vect_parallele());
     printf("Test de la fonction composante max = %d\n", tester_fct_calculer_val_max_parallele());
@@ -178,8 +117,5 @@ int main()
     printf("Test de la fonction méthodes des puissances = %d\n", tester_fct_methodes_puissances_parallele());
 
 	return 0;
-
-
-
 
 }
