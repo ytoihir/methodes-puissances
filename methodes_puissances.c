@@ -244,6 +244,8 @@ float methodes_puissances(MATRICE_CARREE mat, VECTEUR vect, int n)
     int k;
     VECTEUR vectRes;
 
+	printf("nbt=%d\n", NB_THREADS);
+	
     // m : la composante de v de module maximum
     float m = 1;
 
