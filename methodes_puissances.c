@@ -29,8 +29,6 @@ float generer_nombre_aleatoire()
 	 
 }
 
-
-
 /***********************************************
  *  Fonction permettant de normaliser un vecteur
  * @param vecteur: vecteur à normaliser

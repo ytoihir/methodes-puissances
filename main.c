@@ -1,6 +1,8 @@
 #include "methodes_puissances.h"
 
-long int NB_THREADS = 2;
+int NB_THREADS = 1;
+
+// Fonction pour allouer et désallouer un vecteur
 
 void menu()
 {
@@ -83,10 +85,10 @@ void menu()
 
 }
 
-/*******************************************************
+/********************************************************
  *  Fonction permettant de mesurer la performance
- * @param es : le resultat de la fct methodes_puissances
- * ****************************************************/
+ * @param res : le resultat de la fct methodes_puissances
+ * *****************************************************/
 
 void plot_graphe(float res)
 {
@@ -101,20 +103,51 @@ void plot_graphe(float res)
 		end = clock();
 			
 		tim[i] = ((double)(end-start));
-		printf("%li, %li, %li", (long int)NB_THREADS, (long int)tim, (long int)res);
+		printf("%li, %li, %li\n", (long int)NB_THREADS, (long int)tim, (long int)res);
 		
 		NB_THREADS += 100;
+		i++;
 	}	
 }
 
 int main()
 {
+	
+	MATRICE_CARREE mat;
+    VECTEUR vect;
+    float res;
 
+
+    mat = allouer_matrice_carree(3);
+    mat.tab_mat[0][0]=10;
+    mat.tab_mat[0][1]=0;
+    mat.tab_mat[0][2]=0;
+
+    mat.tab_mat[1][0]=1;
+    mat.tab_mat[1][1]=-3;
+    mat.tab_mat[1][2]=-7;
+
+    mat.tab_mat[2][0]=0;
+    mat.tab_mat[2][1]=2;
+    mat.tab_mat[2][2]=6;
+
+    vect.taille = 3;
+    vect.tab_vect = (float*)malloc(vect.taille*sizeof(float));
+    vect.tab_vect[0]=1;
+    vect.tab_vect[1]=0;
+    vect.tab_vect[2]=0;
+    
+    res = methodes_puissances(mat, vect, 3);
+    
+    plot_graphe(res);
+
+	
+	/*
 	printf("Test de la fonction multiplier matxvect = %d\n", tester_fct_multiplier_mat_vect());
     printf("Test de la fonction composante max = %d\n", tester_fct_calculer_val_max());
     printf("Test de la fonction multipler vectxscalaire = %d\n", tester_fct_multiplier_vect_scal());
     printf("Test de la fonction méthodes des puissances = %d\n", tester_fct_methodes_puissances());
-
+	*/
 	return 0;
 
 }
