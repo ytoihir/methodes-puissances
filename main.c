@@ -2,8 +2,6 @@
 
 int NB_THREADS = 1;
 
-// Fonction pour allouer et désallouer un vecteur
-
 void menu()
 {
     MATRICE_CARREE mat;
@@ -99,11 +97,10 @@ void plot_graphe(float res)
 	while (i < 40)
 	{
 		start = clock();
-		float res = res;
 		end = clock();
 			
 		tim[i] = ((double)(end-start));
-		printf("%li, %li, %li\n", (long int)NB_THREADS, (long int)tim, (long int)res);
+		printf("%li, %li, %lf\n", (long int)NB_THREADS, (long int)tim, (float)res);
 		
 		NB_THREADS += 100;
 		i++;

@@ -1,12 +1,5 @@
 #include "methodes_puissances.h"
 
-/******************************************
- *  VARIABLES PARTAGEES ENTRE LES THREADS
- * ****************************************/
-
-COUPLE_VECT_VAL* donneesVectVal; // Données contenant le couple valeur propre vecteur
-
-
 /***********************************************************************
  *
  *                          LA PARTIE UTILITAIRE
