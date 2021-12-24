@@ -90,18 +90,19 @@ void plot_graphe(MATRICE_CARREE mat, VECTEUR vect)
 {
 	NB_THREADS = 1;
 	float res;
-	int i = 0;
-	double tim[40];
+	int i;
+	double tim;
 	clock_t start, end;
 	
+	i = 0;
 	while (i < 40)
 	{
 		start = clock();	
 		res = methodes_puissances(mat, vect, mat.taille);
     	end = clock();
 		
-		tim[i] = (double)(end-start)/CLOCKS_PER_SEC;
-		printf("%li, %f, %lf\n", (long int)NB_THREADS, (double)tim[i], (float)res);
+		tim = (double)(end-start)/CLOCKS_PER_SEC;
+		printf("%li, %f, %lf\n", (long int)NB_THREADS, (double)tim, (float)res);
 		
 		NB_THREADS += 1;
 		i++;
