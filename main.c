@@ -1,7 +1,5 @@
 #include "methodes_puissances.h"
 
-int NB_THREADS = 1;
-
 void menu()
 {
     MATRICE_CARREE mat;
@@ -90,6 +88,7 @@ void menu()
 
 void plot_graphe(float res)
 {
+	NB_THREADS = 1;
 	int i = 0;
 	double tim[40];
 	clock_t start, end;

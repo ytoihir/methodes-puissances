@@ -7,6 +7,8 @@
 #include <omp.h>
 #include <time.h>
 
+int NB_THREADS;
+
 typedef struct MATRICE_CARREE
 {
 	int taille;

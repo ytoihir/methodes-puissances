@@ -32,7 +32,8 @@ float generer_nombre_aleatoire()
 	 float somme;
 	 int i;
 	 
-	 #pragma omp parallel for private(somme) schedule(dynamic, 1) reduction(somme, +)
+	 omp_set_num_threads(NB_THREADS);
+	 #pragma omp parallel for private(somme) schedule(dynamic, 1) reduction(+: somme)
 	 {
 		 for(i = 0; i < vect.taille; i++)
 		 {
@@ -63,7 +64,7 @@ float generer_nombre_aleatoire()
     vectRes.tab_vect = (float*)malloc(vect.taille*sizeof(float));
     vectRes.taille = vect.taille;
 	 
-	 
+	 omp_set_num_threads(NB_THREADS);
 	 #pragma omp parallel for schedule(dynamic, 1)
 	 {
 		 for(i = 0; i < vect.taille; i++)
@@ -87,6 +88,8 @@ MATRICE_CARREE allouer_matrice_carree(int taille)
 
 	mat.taille = taille;
 	mat.tab_mat =(float**)malloc(taille*sizeof(float));
+	
+	omp_set_num_threads(NB_THREADS);
 	#pragma omp parallel for schedule(static, 1)
 	{
     	for(i=0; i<taille; i++)
@@ -209,6 +212,7 @@ void afficher_vecteur(VECTEUR vect)
 
 void desallouer_matrice_carree(MATRICE_CARREE mat)
 {
+	omp_set_num_threads(NB_THREADS);
 	#pragma omp parallel for schedule(dynamic, 1)
 	{
 		for(int i=0; i<mat.taille; i++) {
@@ -246,6 +250,7 @@ float methodes_puissances(MATRICE_CARREE mat, VECTEUR vect, int n)
     // initialisation
     vect = initialiser_vecteur(vect);
 
+	omp_set_num_threads(NB_THREADS);
 	#pragma omp parallel
 	{
 		#pragma omp for schedule(static, 1)
@@ -273,6 +278,7 @@ float calculer_val_max_composante(VECTEUR vect)
     float valMax=-1;
     if (vect.taille>0) valMax=vect.tab_vect[0];
 
+	omp_set_num_threads(NB_THREADS);
 	#pragma omp parallel for schedule(dynamic, 1)
     {
     	for (i=1; i<vect.taille; i++)
@@ -297,6 +303,7 @@ VECTEUR multiplier_mat_vect(MATRICE_CARREE mat, VECTEUR vect)
     vectRes.tab_vect = (float*)malloc(mat.taille*sizeof(float));
     vectRes.taille = 0;
 
+	omp_set_num_threads(NB_THREADS);
 	#pragma omp parallel 
 	{
 		#pragma omp for schedule(static, 1)
@@ -333,6 +340,7 @@ VECTEUR multiplier_vect_scal(VECTEUR vect, float scalaire)
     vectRes.tab_vect = (float*)malloc(vect.taille*sizeof(float));
     vectRes.taille = 0;
 
+	omp_set_num_threads(NB_THREADS);
 	#pragma omp parallel for schedule(dynamic, 1) reduction(+: vectRes.taille)
 	{
     	for (i=0; i<vect.taille; i++)
