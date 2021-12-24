@@ -96,11 +96,10 @@ void plot_graphe(MATRICE_CARREE mat, VECTEUR vect)
 	
 	while (i < 40)
 	{
-		start = clock();
-		end = clock();
-			
+		start = clock();	
 		res = methodes_puissances(mat, vect, 3);
-    
+    	end = clock();
+		
 		tim[i] = ((double)(end-start));
 		printf("%li, %li, %lf\n", (long int)NB_THREADS, (long int)tim, (float)res);
 		
