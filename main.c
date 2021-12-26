@@ -92,16 +92,16 @@ void plot_graphe(MATRICE_CARREE mat, VECTEUR vect)
 	float res;
 	int i;
 	double tim;
-	clock_t start, end;
+	double start, end;
 	
 	i = 0;
-	while (i < 40)
+	while (i < 5)
 	{
-		start = clock();	
+		start = omp_get_wtime();	
 		res = methodes_puissances(mat, vect, mat.taille);
-    	end = clock();
+    	end = omp_get_wtime();
 		
-		tim = (double)(end-start)/CLOCKS_PER_SEC;
+		tim = (end-start);
 		printf("%li, %f, %lf\n", (long int)NB_THREADS, (double)tim, (float)res);
 		
 		NB_THREADS += 1;
@@ -136,12 +136,11 @@ int main()
     
     plot_graphe(mat, vect);
 	
-	/*
-	printf("Test de la fonction multiplier matxvect = %d\n", tester_fct_multiplier_mat_vect());
-    printf("Test de la fonction composante max = %d\n", tester_fct_calculer_val_max());
-    printf("Test de la fonction multipler vectxscalaire = %d\n", tester_fct_multiplier_vect_scal());
-    printf("Test de la fonction méthodes des puissances = %d\n", tester_fct_methodes_puissances());
-	*/
+	//printf("Test de la fonction multiplier matxvect = %d\n", tester_fct_multiplier_mat_vect());
+    //printf("Test de la fonction composante max = %d\n", tester_fct_calculer_val_max());
+    //printf("Test de la fonction multipler vectxscalaire = %d\n", tester_fct_multiplier_vect_scal());
+    //printf("Test de la fonction méthodes des puissances = %d\n", tester_fct_methodes_puissances());
+	
 	return 0;
 
 }
