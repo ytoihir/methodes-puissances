@@ -95,7 +95,7 @@ void plot_graphe(MATRICE_CARREE mat, VECTEUR vect)
 	double start, end;
 	
 	i = 0;
-	while (i < 5)
+	while (i < 3)
 	{
 		start = omp_get_wtime();	
 		res = methodes_puissances(mat, vect, mat.taille);
