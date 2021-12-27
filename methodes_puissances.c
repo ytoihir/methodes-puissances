@@ -211,31 +211,29 @@ float methodes_puissances(MATRICE_CARREE mat, VECTEUR vect, int n)
 	int k, convergence;
     VECTEUR vectRes, vectRetour;
     float m;
-  
-	#pragma omp parallel num_threads(NB_THREADS)
-    {
-    	// m : la composante de v de module maximum
-    	m = 1;
+
+    // m : la composante de v de module maximum
+    m = 1;
    
-    	// vectRes : vecteur resultant de la multiplication d'une matrice par un vecteur
-    	vectRes.tab_vect = (float*)malloc(mat.taille*sizeof(float));
-    	vectRes.taille = mat.taille;
+    // vectRes : vecteur resultant de la multiplication d'une matrice par un vecteur
+    vectRes.tab_vect = (float*)malloc(mat.taille*sizeof(float));
+    vectRes.taille = mat.taille;
 	
-		// vectRetour
-		vectRetour.taille = mat.taille;
-    
-    	// initialisation
-    	vect = initialiser_vecteur(vect);
+	// vectRetour
+    vectRetour.tab_vect = (float*)malloc(mat.taille*sizeof(float));
+	vectRetour.taille = mat.taille;
+  
+    // initialisation
+    vect = initialiser_vecteur(vect);
 		
+	#pragma omp parallel num_threads(NB_THREADS)
+    {    
 		// problème de convergence
 		convergence = 5;
 
         //#pragma omp for schedule(static, ((convergence-1)/NB_THREADS)) ordered
 		//for (k=1; k<convergence; k++)
     	//{
-            // vectRetour
-    		vectRetour.tab_vect = (float*)malloc(mat.taille*sizeof(float));
-	
             vectRes = multiplier_mat_vect(mat, vect, vectRetour);
             vectRes = multiplier_vect_scal(vectRes, 1/m, vectRetour);
             
