@@ -229,22 +229,22 @@ float methodes_puissances(MATRICE_CARREE mat, VECTEUR vect, int n)
 		
 		// problème de convergence
 		convergence = 5;
-		
-		#pragma omp for schedule(static, (convergence/NB_THREADS)) 
-		for (k=1; k<convergence; k++)
-    	{
-    		// vectRetour
+
+        //#pragma omp for schedule(static, ((convergence-1)/NB_THREADS)) ordered
+		//for (k=1; k<convergence; k++)
+    	//{
+            // vectRetour
     		vectRetour.tab_vect = (float*)malloc(mat.taille*sizeof(float));
 	
-    		vectRes = multiplier_mat_vect(mat, vect, vectRetour);	
-        	vectRes = multiplier_vect_scal(vectRes, 1/m, vectRetour);
-    		vect = vectRes;      	
-    		m = calculer_val_max_composante(vect);
-    		printf("m=%f, k=%d, r=%d\n", m, k, omp_get_thread_num());
-    	}
+            vectRes = multiplier_mat_vect(mat, vect, vectRetour);
+            vectRes = multiplier_vect_scal(vectRes, 1/m, vectRetour);
+            
+            vect = vectRes;
+
+            m = calculer_val_max_composante(vect);
+    	//}
     }    		
     
-    printf("fin\n");
     return m;
 }
 
@@ -259,7 +259,7 @@ float calculer_val_max_composante(VECTEUR vect)
     float valMax=-1;
     if (vect.taille>0) valMax=vect.tab_vect[0];
 
-	#pragma omp shared(valMax) for schedule(static, vect.taille/NB_THREADS) reduction(max: valMax) 
+	#pragma omp shared(valMax) for schedule(static, ((vect.taille-1)/NB_THREADS)) reduction(max: valMax) 
     for (i=1; i<vect.taille; i++)
     {
         if (vect.tab_vect[i]>valMax)
@@ -276,17 +276,17 @@ float calculer_val_max_composante(VECTEUR vect)
 VECTEUR multiplier_mat_vect(MATRICE_CARREE mat, VECTEUR vect, VECTEUR vectRes)
 {
 	int i, j, resColonne;
-    
+ 
     #pragma omp for schedule(static, 1) 
     for (i=0; i<mat.taille; i++)
     {
-    	resColonne = 0;
+        resColonne = 0;
         for (j=0; j<mat.taille; j++)
         {
             resColonne += mat.tab_mat[i][j]*vect.tab_vect[j];
         }
         vectRes.tab_vect[i] = resColonne;
-   	}
+    }
 
     return vectRes;
 }
