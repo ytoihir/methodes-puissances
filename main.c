@@ -91,18 +91,17 @@ void plot_graphe(MATRICE_CARREE mat, VECTEUR vect)
 	NB_THREADS = 1;
 	float res;
 	int i;
-	double tim;
-	double start, end;
+	double tim, start, end;
 	
 	i = 0;
-	while (i < 3)
+	while (i < 20)
 	{
 		start = omp_get_wtime();	
 		res = methodes_puissances(mat, vect, mat.taille);
     	end = omp_get_wtime();
 		
 		tim = (end-start);
-		printf("%li, %f, %lf\n", (long int)NB_THREADS, (double)tim, (float)res);
+		printf("%li, %f, %lf\n", (long int)NB_THREADS, tim, res);
 		
 		NB_THREADS += 1;
 		i++;

@@ -211,7 +211,7 @@ float methodes_puissances(MATRICE_CARREE mat, VECTEUR vect, int n)
 	int k, convergence;
     VECTEUR vectRes, vectRetour;
     float m;
-
+    
     // m : la composante de v de module maximum
     m = 1;
    
@@ -223,11 +223,11 @@ float methodes_puissances(MATRICE_CARREE mat, VECTEUR vect, int n)
     vectRetour.tab_vect = (float*)malloc(mat.taille*sizeof(float));
 	vectRetour.taille = mat.taille;
   
-    // initialisation
-    vect = initialiser_vecteur(vect);
-		
-	#pragma omp parallel num_threads(NB_THREADS)
+    #pragma omp parallel num_threads(NB_THREADS)
     {    
+        // initialisation
+        vect = initialiser_vecteur(vect);
+	
 		// problème de convergence
 		convergence = 5;
 
@@ -241,8 +241,8 @@ float methodes_puissances(MATRICE_CARREE mat, VECTEUR vect, int n)
 
             m = calculer_val_max_composante(vect);
     	//}
-    }    		
-    
+    }    
+
     return m;
 }
 
@@ -255,18 +255,14 @@ float calculer_val_max_composante(VECTEUR vect)
 {
     int i;
     float valMax=-1;
-    double start, end;
-	
+    
     if (vect.taille>0) valMax=vect.tab_vect[0];
 
-	#pragma omp shared(valMax) for schedule(static, ((vect.taille-1)/NB_THREADS)) reduction(max: valMax) 
+	#pragma omp shared(valMax) for schedule(static, ((vect.taille-1)/NB_THREADS)) reduction(max: valMax)
     for (i=1; i<vect.taille; i++)
     {
-        start = omp_get_wtime();	
         if (vect.tab_vect[i]>valMax)
             valMax = vect.tab_vect[i];
-        end = omp_get_wtime();
-        printf("FONCTION 4 : temps=%f rang=%d\n", (end-start), omp_get_thread_num());
     }
 
     return valMax;
@@ -279,20 +275,16 @@ float calculer_val_max_composante(VECTEUR vect)
 VECTEUR multiplier_mat_vect(MATRICE_CARREE mat, VECTEUR vect, VECTEUR vectRes)
 {
 	int i, j, resColonne;
-    double start, end;
-	
+    
     #pragma omp for schedule(static, 1) 
     for (i=0; i<mat.taille; i++)
     {
-        start = omp_get_wtime();	
         resColonne = 0;
         for (j=0; j<mat.taille; j++)
         {
             resColonne += mat.tab_mat[i][j]*vect.tab_vect[j];
         }
         vectRes.tab_vect[i] = resColonne;
-        end = omp_get_wtime();
-        printf("FONCTION 2 : temps=%f rang=%d\n", (end-start), omp_get_thread_num());
     }
 
     return vectRes;
@@ -306,16 +298,12 @@ VECTEUR multiplier_vect_scal(VECTEUR vect, float scalaire, VECTEUR vectRes)
 {
     int i;
     float resColonne = 0;
-    double start, end;
-
+    
 	#pragma omp for schedule(static, 1) 
     for (i=0; i<vect.taille; i++)
     {
-        start = omp_get_wtime();	
-    	resColonne = vect.tab_vect[i] * scalaire;
+        resColonne = vect.tab_vect[i] * scalaire;
         vectRes.tab_vect[i] = resColonne;
-        end = omp_get_wtime();
-        printf("FONCTION 3 : temps=%f rang=%d\n", (end-start), omp_get_thread_num());
     }
 
     return vectRes;
@@ -328,11 +316,9 @@ VECTEUR multiplier_vect_scal(VECTEUR vect, float scalaire, VECTEUR vectRes)
  
 VECTEUR initialiser_vecteur(VECTEUR vect)
 {
-	 int i;
-	 double start, end;
-
-	 // vectRes : vecteur resultant de l'initialisation du vecteur initial vect
-	 VECTEUR vectRes;
+	int i;
+	// vectRes : vecteur resultant de l'initialisation du vecteur initial vect
+	VECTEUR vectRes;
 	
 	// normaliser le vecteur initial vect
 	float vectNormalise = normaliser_vecteur(vect);
@@ -340,17 +326,13 @@ VECTEUR initialiser_vecteur(VECTEUR vect)
     vectRes.tab_vect = (float*)malloc(vect.taille*sizeof(float));
     vectRes.taille = vect.taille;
 	 
-	 #pragma omp for schedule(static, 1) 
-     for(i = 0; i < vect.taille; i++)
-	 {
-        start = omp_get_wtime();	
-	 	vectRes.tab_vect[i] = vect.tab_vect[i] / vectNormalise;
-        end = omp_get_wtime();
-        printf("FONCTION 1 : temps=%f rang=%d\n", (end-start), omp_get_thread_num());
-	 }
+	#pragma omp for schedule(static, 1) 
+    for(i = 0; i < vect.taille; i++)
+	{
+        vectRes.tab_vect[i] = vect.tab_vect[i] / vectNormalise;
+    }
 	 
-	 return vect;
-	 
+	return vect; 
 }
 
 /*************************************************
