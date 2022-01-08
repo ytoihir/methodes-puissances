@@ -94,13 +94,13 @@ void plot_graphe(MATRICE_CARREE mat, VECTEUR vect)
 	double tim, start, end;
 	
 	i = 0;
-	while (i < omp_get_max_threads())
+	while (i < 50)
 	{
 		start = omp_get_wtime();	
 		res = methodes_puissances(mat, vect, mat.taille);
     	end = omp_get_wtime();
 		
-		tim = (end-start)/100.0;
+		tim = (end-start);
 		printf("%li, %f, %lf\n", (long int)NB_THREADS, tim, res);
 		
 		NB_THREADS += 1;
@@ -110,6 +110,7 @@ void plot_graphe(MATRICE_CARREE mat, VECTEUR vect)
 
 int main()
 {
+	
 	MATRICE_CARREE mat;
     VECTEUR vect;
 
@@ -132,8 +133,8 @@ int main()
     vect.tab_vect[1]=0;
     vect.tab_vect[2]=0;
     
-	plot_graphe(mat, vect);
-
+    plot_graphe(mat, vect);
+	
 	//printf("Test de la fonction multiplier matxvect = %d\n", tester_fct_multiplier_mat_vect());
     //printf("Test de la fonction composante max = %d\n", tester_fct_calculer_val_max());
     //printf("Test de la fonction multipler vectxscalaire = %d\n", tester_fct_multiplier_vect_scal());

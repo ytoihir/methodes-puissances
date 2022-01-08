@@ -29,27 +29,26 @@ float generer_nombre_aleatoire()
 
  float normaliser_vecteur(VECTEUR vect)
  {
-	float somme;
-    somme = 0;
-	int i;
+	 float somme;
+	 int i;
 	 
-    if (vect.tab_vect == NULL)
-	{
-	    exit(EXIT_FAILURE);
-	}	
-
-	#pragma omp shared(somme) for reduction(+: somme)
-	for(i = 0; i < vect.taille; i++)
-	{
-		somme = somme + (vect.tab_vect[i] * vect.tab_vect[i]);
-	}
+	 omp_set_num_threads(NB_THREADS);
+	 #pragma omp parallel 
+	 {
+	     #pragma omp for reduction(+: somme)
+		 for(i = 0; i < vect.taille; i++)
+		 {
+			 somme = somme + (vect.tab_vect[i] * vect.tab_vect[i]);
+		 }
+	 }
 	 
-	return sqrt(somme);
+	 return sqrt(somme);
+	 
+	 
  }
  
 /**********************************************************************
  *  Fonction permettant d'allouer l'espace mémoire d'une matrice carrée
- * @param taille : la taille de la matrice à allouer
  * *******************************************************************/
 
 MATRICE_CARREE allouer_matrice_carree(int taille)
@@ -60,15 +59,14 @@ MATRICE_CARREE allouer_matrice_carree(int taille)
 	mat.taille = taille;
 	mat.tab_mat =(float**)malloc(taille*sizeof(float));
 	
-	if (mat.tab_mat == NULL)
+	omp_set_num_threads(NB_THREADS);
+	#pragma omp parallel
 	{
-		exit(EXIT_FAILURE);
-	}
-	
-	#pragma omp parallel for
-    for(i=0; i<taille; i++)
-    {
-        mat.tab_mat[i] = (float*)malloc(taille*sizeof(float));
+		#pragma omp for
+    	for(i=0; i<taille; i++)
+    	{
+        	mat.tab_mat[i] = (float*)malloc(taille*sizeof(float));
+    	}
     }
 
     return mat;
@@ -82,11 +80,6 @@ MATRICE_CARREE remplir_matrice(MATRICE_CARREE mat)
 {
     int i, j;
     float nbr;
-    
-    if (mat.tab_mat == NULL)
-	{
-		exit(EXIT_FAILURE);
-	}
 
     for(i=0; i<mat.taille; i++)
     {
@@ -100,6 +93,24 @@ MATRICE_CARREE remplir_matrice(MATRICE_CARREE mat)
     return mat;
 }
 
+/********************************************
+ *  Fonction permettant de remplir un vecteur
+ * *****************************************/
+
+VECTEUR remplir_vecteur(VECTEUR vect)
+{
+    int i;
+    float nbr;
+
+    for(i=0; i<vect.taille; i++)
+    {
+    	printf("Indice %d = ", i);
+       	scanf("%f", &nbr);
+       	vect.tab_vect[i] = nbr;
+    }
+    return vect;
+}
+
 /***********************************************************
  *  Fonction permettant de remplir une matrice aléatoirement
  * ********************************************************/
@@ -107,11 +118,6 @@ MATRICE_CARREE remplir_matrice(MATRICE_CARREE mat)
 MATRICE_CARREE generer_matrice_aleatoire(MATRICE_CARREE mat)
 {
     int i, j;
-    
-    if (mat.tab_mat == NULL)
-	{
-		exit(EXIT_FAILURE);
-	}
 
     for(i=0; i<mat.taille; i++)
     {
@@ -124,93 +130,6 @@ MATRICE_CARREE generer_matrice_aleatoire(MATRICE_CARREE mat)
     return mat;
 }
 
-/*********************************************
- *  Fonction permettant d'afficher une matrice
- * @param mat: la matrice à afficher
- * ******************************************/
-
-void afficher_matrice(MATRICE_CARREE mat)
-{
-	int i,j;
-	
-	if (mat.tab_mat == NULL)
-	{
-		exit(EXIT_FAILURE);
-	}
-
-    for(i=0; i<mat.taille; i++)
-    {
-        for(j=0; j<mat.taille; j++)
-        {
-            printf("mat.tab_mat[%d][%d] = %lf\n",i,j, mat.tab_mat[i][j]);
-        }
-    }
-}
-
-/**************************************************************************
- *  Fonction permettant de désaouller l'espace mémoire d'une matrice carrée
- * ***********************************************************************/
-
-void desallouer_matrice_carree(MATRICE_CARREE mat)
-{
-	if (mat.tab_mat == NULL)
-	{
-		exit(EXIT_FAILURE);
-	}
-	
-	#pragma omp parallel for
-	for(int i=0; i<mat.taille; i++) {
-        free(mat.tab_mat[i]);
-    }
-    free(mat.tab_mat);
-	return;
-}
-
-/***********************************************
- *  Fonction permettant d'allouer un vecteur
- * @param taille: la taille du vecteur à allouer
- * ********************************************/
-
-VECTEUR allouer_vecteur(int taille)
-{
-	VECTEUR vect;
-	
-	vect.taille = taille;
-	
-	vect.tab_vect = (float*) malloc(sizeof(float) * vect.taille);
-	
-	if (vect.tab_vect == NULL)
-	{
-		exit(EXIT_FAILURE);
-	}
-	
-	return vect;
-}
-
-/*********************************************************
- *  Fonction permettant de remplir un vecteur manuellement
- * @param vect: vecteur à remplir
- * ******************************************************/
-
-VECTEUR remplir_vecteur(VECTEUR vect)
-{
-    int i;
-    float nbr;
-    
-    if (vect.tab_vect == NULL)
-	{
-		exit(EXIT_FAILURE);
-	}
-
-    for(i=0; i<vect.taille; i++)
-    {
-    	printf("Indice %d = ", i);
-       	scanf("%f", &nbr);
-       	vect.tab_vect[i] = nbr;
-    }
-    return vect;
-}
-
 /**********************************************************
  *  Fonction permettant de remplir un vecteur aléatoirement
  * *******************************************************/
@@ -218,11 +137,6 @@ VECTEUR remplir_vecteur(VECTEUR vect)
 VECTEUR generer_vecteur_aleatoire(VECTEUR vect)
 {
     int i;
-    
-    if (vect.tab_vect == NULL)
-	{
-		exit(EXIT_FAILURE);
-	}
 
     for(i=0; i<vect.taille; i++)
     {
@@ -233,17 +147,29 @@ VECTEUR generer_vecteur_aleatoire(VECTEUR vect)
 }
 
 /*********************************************
+ *  Fonction permettant d'afficher une matrice
+ * ******************************************/
+
+void afficher_matrice(MATRICE_CARREE mat)
+{
+	int i,j;
+
+    for(i=0; i<mat.taille; i++)
+    {
+        for(j=0; j<mat.taille; j++)
+        {
+            printf("mat.tab_mat[%d][%d] = %lf\n",i,j, mat.tab_mat[i][j]);
+        }
+    }
+}
+
+/*********************************************
  *  Fonction permettant d'afficher un vecteur
  * ******************************************/
 
 void afficher_vecteur(VECTEUR vect)
 {
 	int i;
-	
-	if (vect.tab_vect == NULL)
-	{
-		exit(EXIT_FAILURE);
-	}
 
     for(i=0; i<vect.taille; i++)
     {
@@ -251,20 +177,23 @@ void afficher_vecteur(VECTEUR vect)
     }
 }
 
-/*********************************************
- *  Fonction permettant de libérer un vecteur
- * ******************************************/
- 
- void desallouer_vecteur(VECTEUR vect)
- {
-	 if (vect.tab_vect == NULL)
-	 {
-		exit(EXIT_FAILURE);
-	 }	
-	 
-	 free(vect.tab_vect);
-	 
- }
+/**************************************************************************
+ *  Fonction permettant de désaouller l'espace mémoire d'une matrice carrée
+ * ***********************************************************************/
+
+void desallouer_matrice_carree(MATRICE_CARREE mat)
+{
+	omp_set_num_threads(NB_THREADS);
+	#pragma omp parallel
+	{
+	    #pragma omp for
+		for(int i=0; i<mat.taille; i++) {
+        	free(mat.tab_mat[i]);
+    	}
+    }
+    free(mat.tab_mat);
+	return;
+}
 
 /***********************************************************************
  *
@@ -283,19 +212,19 @@ float methodes_puissances(MATRICE_CARREE mat, VECTEUR vect, int n)
     VECTEUR vectRes, vectRetour;
     float m;
     
+    // m : la composante de v de module maximum
+    m = 1;
+   
+    // vectRes : vecteur resultant de la multiplication d'une matrice par un vecteur
+    vectRes.tab_vect = (float*)malloc(mat.taille*sizeof(float));
+    vectRes.taille = mat.taille;
+	
+	// vectRetour
+    vectRetour.tab_vect = (float*)malloc(mat.taille*sizeof(float));
+	vectRetour.taille = mat.taille;
+  
     #pragma omp parallel num_threads(NB_THREADS)
     {    
-        // m : la composante de v de module maximum
-        m = 1;
-    
-        // vectRes : vecteur resultant de la multiplication d'une matrice par un vecteur
-        vectRes.taille = mat.taille;
-        vectRes = allouer_vecteur(vectRes.taille);
-        
-        // vectRetour
-        vectRetour.taille = mat.taille;
-        vectRetour = allouer_vecteur(vectRetour.taille);
-    
         // initialisation
         vect = initialiser_vecteur(vect);
 	
@@ -347,7 +276,7 @@ VECTEUR multiplier_mat_vect(MATRICE_CARREE mat, VECTEUR vect, VECTEUR vectRes)
 {
 	int i, j, resColonne;
     
-    #pragma omp for schedule(static, 1)
+    #pragma omp for schedule(static, 1) 
     for (i=0; i<mat.taille; i++)
     {
         resColonne = 0;
@@ -394,8 +323,8 @@ VECTEUR initialiser_vecteur(VECTEUR vect)
 	// normaliser le vecteur initial vect
 	float vectNormalise = normaliser_vecteur(vect);
     
+    vectRes.tab_vect = (float*)malloc(vect.taille*sizeof(float));
     vectRes.taille = vect.taille;
-    vectRes = allouer_vecteur(vectRes.taille);
 	 
 	#pragma omp for schedule(static, 1) 
     for(i = 0; i < vect.taille; i++)
@@ -417,6 +346,8 @@ VECTEUR initialiser_vecteur(VECTEUR vect)
  */
 
 
+
+
 /***********************************************************************
  *
  *            FONCTIONS DE TESTS POUR LA PARTIE PARALLELE
@@ -434,7 +365,7 @@ bool tester_fct_calculer_val_max()
     float resAttendu, resObtenu;
 
     vect.taille = 4;
-    vect = allouer_vecteur(vect.taille);
+    vect.tab_vect = (float*)malloc(vect.taille*sizeof(float));
     vect.tab_vect[0]=7;
     vect.tab_vect[1]=8;
     vect.tab_vect[2]=4;
@@ -483,21 +414,21 @@ bool tester_fct_multiplier_mat_vect()
     mat.tab_mat[3][3]=6;
 
     vect.taille = 4;
-    vect = allouer_vecteur(vect.taille);
+    vect.tab_vect = (float*)malloc(vect.taille*sizeof(float));
     vect.tab_vect[0]=7;
     vect.tab_vect[1]=8;
     vect.tab_vect[2]=4;
     vect.tab_vect[3]=7;
 
     vectResAttendu.taille = 4;
-    vectResAttendu = allouer_vecteur(vectResAttendu.taille);
+    vectResAttendu.tab_vect = (float*)malloc(vectResAttendu.taille*sizeof(float));
     vectResAttendu.tab_vect[0]=109;
     vectResAttendu.tab_vect[1]=139;
     vectResAttendu.tab_vect[2]=64;
     vectResAttendu.tab_vect[3]=89;
 
+	vectResObtenu.tab_vect = (float*)malloc(vect.taille*sizeof(float));
     vectResObtenu.taille = vect.taille;
-    vectResObtenu = allouer_vecteur(vectResObtenu.taille);
 
 	vectResObtenu = multiplier_mat_vect(mat, vect, vectResObtenu);
 
@@ -531,21 +462,21 @@ bool tester_fct_multiplier_vect_scal()
     bool memesVecteurs = true;
 
     vect.taille = 4;
-    vect = allouer_vecteur(vectResObtenu.taille);
+    vect.tab_vect = (float*)malloc(vect.taille*sizeof(float));
     vect.tab_vect[0]=7;
     vect.tab_vect[1]=8;
     vect.tab_vect[2]=4;
     vect.tab_vect[3]=7;
 
     vectResAttendu.taille = 4;
-    vectResAttendu = allouer_vecteur(vectResAttendu.taille);
+    vectResAttendu.tab_vect = (float*)malloc(vectResAttendu.taille*sizeof(float));
     vectResAttendu.tab_vect[0]=21;
     vectResAttendu.tab_vect[1]=24;
     vectResAttendu.tab_vect[2]=12;
     vectResAttendu.tab_vect[3]=21;
     
+    vectResObtenu.tab_vect = (float*)malloc(vect.taille*sizeof(float));
     vectResObtenu.taille = vect.taille;
-    vectResObtenu = allouer_vecteur(vectResObtenu.taille);
 
 	vectResObtenu = multiplier_vect_scal(vect, scal, vectResObtenu);
 
@@ -591,7 +522,7 @@ bool tester_fct_methodes_puissances()
     mat.tab_mat[2][2]=6;
 
     vect.taille = 3;
-    vect = allouer_vecteur(vect.taille);
+    vect.tab_vect = (float*)malloc(vect.taille*sizeof(float));
     vect.tab_vect[0]=1;
     vect.tab_vect[1]=0;
     vect.tab_vect[2]=0;
