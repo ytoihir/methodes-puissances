@@ -22,7 +22,6 @@ float generer_nombre_aleatoire()
 	 
 }
 
-<<<<<<< HEAD
 /***********************************************
  *  Fonction permettant de normaliser un vecteur
  * @param vecteur: vecteur à normaliser
@@ -30,27 +29,24 @@ float generer_nombre_aleatoire()
 
  float normaliser_vecteur(VECTEUR vect)
  {
-	 float somme;
-     somme = 0;
-	 int i;
+	float somme;
+    somme = 0;
+	int i;
 	 
-	 omp_set_num_threads(NB_THREADS);
-	 #pragma omp parallel 
-	 {
-	     #pragma omp for reduction(+: somme)
-		 for(i = 0; i < vect.taille; i++)
-		 {
-			 somme = somme + (vect.tab_vect[i] * vect.tab_vect[i]);
-		 }
-	 }
+    if (vect.tab_vect == NULL)
+	{
+	    exit(EXIT_FAILURE);
+	}	
+
+	#pragma omp shared(somme) for reduction(+: somme)
+	for(i = 0; i < vect.taille; i++)
+	{
+		somme = somme + (vect.tab_vect[i] * vect.tab_vect[i]);
+	}
 	 
-	 return sqrt(somme);
-	 
-	 
+	return sqrt(somme);
  }
  
-=======
->>>>>>> 918a0e3dda25787a3e94c06af2d88f95a8ad9499
 /**********************************************************************
  *  Fonction permettant d'allouer l'espace mémoire d'une matrice carrée
  * @param taille : la taille de la matrice à allouer
@@ -69,14 +65,10 @@ MATRICE_CARREE allouer_matrice_carree(int taille)
 		exit(EXIT_FAILURE);
 	}
 	
-	omp_set_num_threads(NB_THREADS);
-	#pragma omp parallel
-	{
-		#pragma omp for
-    	for(i=0; i<taille; i++)
-    	{
-        	mat.tab_mat[i] = (float*)malloc(taille*sizeof(float));
-    	}
+	#pragma omp parallel for
+    for(i=0; i<taille; i++)
+    {
+        mat.tab_mat[i] = (float*)malloc(taille*sizeof(float));
     }
 
     return mat;
@@ -166,13 +158,9 @@ void desallouer_matrice_carree(MATRICE_CARREE mat)
 		exit(EXIT_FAILURE);
 	}
 	
-	omp_set_num_threads(NB_THREADS);
-	#pragma omp parallel
-	{
-	    #pragma omp for
-		for(int i=0; i<mat.taille; i++) {
-        	free(mat.tab_mat[i]);
-    	}
+	#pragma omp parallel for
+	for(int i=0; i<mat.taille; i++) {
+        free(mat.tab_mat[i]);
     }
     free(mat.tab_mat);
 	return;
@@ -263,35 +251,6 @@ void afficher_vecteur(VECTEUR vect)
     }
 }
 
-/***********************************************
- *  Fonction permettant de normaliser un vecteur
- * @param vecteur: vecteur à normaliser
- * *********************************************/
-
- float normaliser_vecteur(VECTEUR vect)
- {
-	 float somme;
-	 int i;
-	 
-	 if (vect.tab_vect == NULL)
-	 {
-		exit(EXIT_FAILURE);
-	 }	
-	 
-	 omp_set_num_threads(NB_THREADS);
-	 #pragma omp parallel 
-	 {
-	     #pragma omp for reduction(+: somme)
-		 for(i = 0; i < vect.taille; i++)
-		 {
-			 somme = somme + (vect.tab_vect[i] * vect.tab_vect[i]);
-		 }
-	 }
-	 
-	 return sqrt(somme);
-	 
- }
-
 /*********************************************
  *  Fonction permettant de libérer un vecteur
  * ******************************************/
@@ -324,19 +283,19 @@ float methodes_puissances(MATRICE_CARREE mat, VECTEUR vect, int n)
     VECTEUR vectRes, vectRetour;
     float m;
     
-    // m : la composante de v de module maximum
-    m = 1;
-   
-    // vectRes : vecteur resultant de la multiplication d'une matrice par un vecteur
-    vectRes.taille = mat.taille;
-    vectRes = allouer_vecteur(vectRes.taille);
-	
-	// vectRetour
-	vectRetour.taille = mat.taille;
-	vectRetour = allouer_vecteur(vectRetour.taille);
-  
     #pragma omp parallel num_threads(NB_THREADS)
     {    
+        // m : la composante de v de module maximum
+        m = 1;
+    
+        // vectRes : vecteur resultant de la multiplication d'une matrice par un vecteur
+        vectRes.taille = mat.taille;
+        vectRes = allouer_vecteur(vectRes.taille);
+        
+        // vectRetour
+        vectRetour.taille = mat.taille;
+        vectRetour = allouer_vecteur(vectRetour.taille);
+    
         // initialisation
         vect = initialiser_vecteur(vect);
 	
@@ -483,11 +442,7 @@ bool tester_fct_calculer_val_max()
 
     resAttendu = 8;
 
-	omp_set_num_threads(NB_THREADS);
-	#pragma omp parallel
-	{
-    	resObtenu = calculer_val_max_composante(vect);
-    }
+	resObtenu = calculer_val_max_composante(vect);
 
     if (resAttendu!=resObtenu) return false;
     return true;
@@ -544,12 +499,8 @@ bool tester_fct_multiplier_mat_vect()
     vectResObtenu.taille = vect.taille;
     vectResObtenu = allouer_vecteur(vectResObtenu.taille);
 
-	omp_set_num_threads(NB_THREADS);
-	#pragma omp parallel
-	{
-    	vectResObtenu = multiplier_mat_vect(mat, vect, vectResObtenu);
-	}
-	
+	vectResObtenu = multiplier_mat_vect(mat, vect, vectResObtenu);
+
     if (vectResAttendu.taille == vectResObtenu.taille)
     {
         for(i=0; i<vectResAttendu.taille; i++)
@@ -596,12 +547,8 @@ bool tester_fct_multiplier_vect_scal()
     vectResObtenu.taille = vect.taille;
     vectResObtenu = allouer_vecteur(vectResObtenu.taille);
 
-	omp_set_num_threads(NB_THREADS);
-	#pragma omp parallel
-	{
-		vectResObtenu = multiplier_vect_scal(vect, scal, vectResObtenu);
-    }
-    
+	vectResObtenu = multiplier_vect_scal(vect, scal, vectResObtenu);
+
     if (vectResAttendu.taille == vectResObtenu.taille)
     {
         for(i=0; i<vectResAttendu.taille; i++)
