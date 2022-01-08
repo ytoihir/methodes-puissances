@@ -128,7 +128,7 @@ int main()
     mat.tab_mat[2][2]=6;
 
     vect.taille = 3;
-    vect.tab_vect = (float*)malloc(vect.taille*sizeof(float));
+    vect = allouer_vecteur(vect.taille);
     vect.tab_vect[0]=1;
     vect.tab_vect[1]=0;
     vect.tab_vect[2]=0;

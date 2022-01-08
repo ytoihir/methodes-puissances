@@ -13,7 +13,7 @@ ISTY | IATIC 4 | 2021-2022
 
 ### Compiler le programme :
 ```sh
-$ gcc main.c methodes_puissances.c -o main
+$ make
 ```
 
 ### Lancer le programme :
