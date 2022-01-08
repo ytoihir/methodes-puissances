@@ -261,7 +261,6 @@ void afficher_vecteur(VECTEUR vect)
 	 
 	 return sqrt(somme);
 	 
-	 
  }
 
 /*********************************************
@@ -360,7 +359,7 @@ VECTEUR multiplier_mat_vect(MATRICE_CARREE mat, VECTEUR vect, VECTEUR vectRes)
 {
 	int i, j, resColonne;
     
-    #pragma omp for schedule(static, 1) 
+    #pragma omp for schedule(static, 1)
     for (i=0; i<mat.taille; i++)
     {
         resColonne = 0;

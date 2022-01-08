@@ -1,5 +1,5 @@
 main: main.o methodes_puissances.o
-	@gcc main.o methodes_puissances.o -fopenmp -lm -o main
+	@gcc main.o methodes_puissances.o -fopenmp std=c99 -lm -o main
 	
 main.o: main.c
 	@gcc -c main.c
