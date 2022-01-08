@@ -30,6 +30,7 @@ float generer_nombre_aleatoire()
  float normaliser_vecteur(VECTEUR vect)
  {
 	 float somme;
+     somme = 0;
 	 int i;
 	 
 	 omp_set_num_threads(NB_THREADS);

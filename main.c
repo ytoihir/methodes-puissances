@@ -140,6 +140,8 @@ int main()
     //printf("Test de la fonction multipler vectxscalaire = %d\n", tester_fct_multiplier_vect_scal());
     //printf("Test de la fonction méthodes des puissances = %d\n", tester_fct_methodes_puissances());
 	
+	desallouer_matrice_carree(mat);
+
 	return 0;
 
 }
