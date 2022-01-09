@@ -33,7 +33,7 @@ VECTEUR allouer_vecteur(int taille)
 	
 	vect.taille = taille;
 	
-	vect = allouer_vecteur(vect.taille);
+	vect.tab_vect = (float*)malloc(vect.taille*sizeof(float));
 	
 	if (vect.tab_vect == NULL)
 	{
@@ -136,8 +136,8 @@ float normaliser_vecteur(VECTEUR vect)
  *  Fonction permettant de libérer un vecteur
  * ******************************************/
  
- void desallouer_vecteur(VECTEUR vect)
- {
+void desallouer_vecteur(VECTEUR vect)
+{
 	 if (vect.tab_vect == NULL)
 	 {
 		exit(EXIT_FAILURE);
@@ -146,7 +146,7 @@ float normaliser_vecteur(VECTEUR vect)
 	 free(vect.tab_vect);
 	 
 	 return;
- }
+}
  
 /**********************************************************************
  *  Fonction permettant d'allouer l'espace mémoire d'une matrice carrée
@@ -297,6 +297,11 @@ float methodes_puissances(MATRICE_CARREE mat, VECTEUR vect, int n)
 	// vectRetour
 	vectRetour.taille = mat.taille;
 	vectRetour = allouer_vecteur(vectRetour.taille);
+	
+	if (vect.tab_vect == NULL || mat.tab_mat == NULL)
+	{
+		exit(EXIT_FAILURE);
+	}
   
     #pragma omp parallel num_threads(NB_THREADS)
     {    
@@ -456,6 +461,8 @@ bool tester_fct_calculer_val_max()
 
 	resObtenu = calculer_val_max_composante(vect);
 
+	desallouer_vecteur(vect);
+
     if (resAttendu!=resObtenu) return false;
     return true;
 }
@@ -526,6 +533,12 @@ bool tester_fct_multiplier_mat_vect()
     }
 
     else memesVecteurs = false;
+
+    desallouer_matrice_carree(mat);
+	desallouer_vecteur(vect);
+	desallouer_vecteur(vectResObtenu);
+	desallouer_vecteur(vectResAttendu);
+    
     return memesVecteurs;
 }
 
@@ -572,8 +585,12 @@ bool tester_fct_multiplier_vect_scal()
             }
         }
     }
-
+	
     else memesVecteurs = false;
+
+	desallouer_vecteur(vect);
+	desallouer_vecteur(vectResObtenu);
+	desallouer_vecteur(vectResAttendu);
 
     return memesVecteurs;
 }
@@ -588,8 +605,9 @@ bool tester_fct_methodes_puissances()
     VECTEUR vect;
     float valeur_propre_attendue = 10;
     float valeur_propre_obtenue;
-
-    mat = allouer_matrice_carree(3);
+	
+	mat.taille = 3;
+    mat = allouer_matrice_carree(mat.taille);
     mat.tab_mat[0][0]=10;
     mat.tab_mat[0][1]=0;
     mat.tab_mat[0][2]=0;
@@ -609,6 +627,10 @@ bool tester_fct_methodes_puissances()
     vect.tab_vect[2]=0;
 
 	valeur_propre_obtenue = methodes_puissances(mat, vect, mat.taille);
+	printf("valeur propre obtenue : %.2f\nvaluer propre attendue : %.2f\n", valeur_propre_obtenue, valeur_propre_attendue);
+    
+    desallouer_matrice_carree(mat);
+	desallouer_vecteur(vect);
     
     if (valeur_propre_attendue!=valeur_propre_obtenue) return false;
     return true;

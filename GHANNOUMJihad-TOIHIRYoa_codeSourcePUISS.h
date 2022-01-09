@@ -42,7 +42,6 @@ VECTEUR multiplier_mat_vect(MATRICE_CARREE mat, VECTEUR vect, VECTEUR vectRes);
 float calculer_val_max_composante(VECTEUR vect);
 VECTEUR multiplier_vect_scal(VECTEUR vect, float scalaire, VECTEUR vectRes);
 float methodes_puissances(MATRICE_CARREE mat, VECTEUR vect, int n);
-bool verif_convergence();
 bool tester_fct_verif_convergence();
 bool tester_fct_calculer_val_max();
 bool tester_fct_multiplier_mat_vect();
