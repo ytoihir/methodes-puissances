@@ -122,7 +122,6 @@ float normaliser_vecteur(VECTEUR vect)
 		exit(EXIT_FAILURE);
 	}
 	 
-	omp_set_num_threads(NB_THREADS);
 	#pragma omp shared(somme) for reduction(+: somme)
 	for(i = 0; i < vect.taille; i++)
 	{
@@ -285,7 +284,7 @@ float methodes_puissances(MATRICE_CARREE mat, VECTEUR vect, int n)
 {
 	int k, convergence;
     VECTEUR vectRes, vectRetour;
-    float m;
+    float m, mBis;
     
     // m : la composante de v de module maximum
     m = 1;
@@ -302,23 +301,27 @@ float methodes_puissances(MATRICE_CARREE mat, VECTEUR vect, int n)
 	{
 		exit(EXIT_FAILURE);
 	}
+
+    convergence = 1;
+    mBis = -1;
   
     #pragma omp parallel num_threads(NB_THREADS)
     {    
         // initialisation
         vect = initialiser_vecteur(vect);
-	
-
-        //#pragma omp for schedule(static, ((convergence-1)/NB_THREADS)) ordered
-		//for (k=1; k<convergence; k++)
-    	//{
+        
+        for (k=0; k<convergence; k++)
+        {
+            vectRetour.tab_vect = (float*)malloc(vect.taille*sizeof(float));
             vectRes = multiplier_mat_vect(mat, vect, vectRetour);
             vectRes = multiplier_vect_scal(vectRes, 1/m, vectRetour);
-            
             vect = vectRes;
-
             m = calculer_val_max_composante(vect);
-    	//}
+            if (m==mBis) k=convergence;
+            else convergence++;
+            mBis = m;
+            vectRetour = allouer_vecteur(vectRetour.taille);
+        }
     }    
 
     return m;
@@ -363,7 +366,7 @@ VECTEUR multiplier_mat_vect(MATRICE_CARREE mat, VECTEUR vect, VECTEUR vectRes)
 	{
 		exit(EXIT_FAILURE);
 	}
-    
+
     #pragma omp for schedule(static, 1) 
     for (i=0; i<mat.taille; i++)
     {
@@ -391,7 +394,7 @@ VECTEUR multiplier_vect_scal(VECTEUR vect, float scalaire, VECTEUR vectRes)
 	{
 		exit(EXIT_FAILURE);
 	}
-    
+
 	#pragma omp for schedule(static, 1) 
     for (i=0; i<vect.taille; i++)
     {

@@ -91,28 +91,6 @@ void menu()
  * @param res : le resultat de la fct methodes_puissances
  * *****************************************************/
 
-void plot_graphe(MATRICE_CARREE mat, VECTEUR vect)
-{
-	NB_THREADS = 1;
-	float res;
-	int i;
-	double tim, start, end;
-	
-	i = 0;
-	while (i < 50)
-	{
-		start = omp_get_wtime();	
-		res = methodes_puissances(mat, vect, mat.taille);
-    	end = omp_get_wtime();
-		
-		tim = (end-start);
-		printf("%li, %f, %lf\n", (long int)NB_THREADS, tim, res);
-		
-		NB_THREADS += 1;
-		i++;
-	}	
-}
-
 int main()
 {
 
@@ -137,16 +115,14 @@ int main()
     vect.tab_vect[0]=1;
     vect.tab_vect[1]=0;
     vect.tab_vect[2]=0;
-   
     
-    plot_graphe(mat, vect);
-
-	//printf("Test de la fonction multiplier matxvect = %d\n", tester_fct_multiplier_mat_vect());
-    //printf("Test de la fonction composante max = %d\n", tester_fct_calculer_val_max());
-    //printf("Test de la fonction multipler vectxscalaire = %d\n", tester_fct_multiplier_vect_scal());
-    //printf("Test de la fonction méthodes des puissances = %d\n", tester_fct_methodes_puissances());
-
+	NB_THREADS = 1;
 	
+	printf("Test de la fonction multiplier matxvect = %d\n", tester_fct_multiplier_mat_vect());
+    printf("Test de la fonction composante max = %d\n", tester_fct_calculer_val_max());
+    printf("Test de la fonction multipler vectxscalaire = %d\n", tester_fct_multiplier_vect_scal());
+    printf("Test de la fonction méthodes des puissances = %d\n", tester_fct_methodes_puissances());
+
 	desallouer_matrice_carree(mat);
 	desallouer_vecteur(vect);
 
