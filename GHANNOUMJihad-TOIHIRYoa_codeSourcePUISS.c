@@ -6,22 +6,6 @@
  *
  * ********************************************************************/
 
-/*****************************************************
- *  Fonction permettant de générer un nombre aléatoire
- * **************************************************/
- 
-float generer_nombre_aleatoire()
-{
-	// nombre aléatoire généré
-	float nbr;
-	
-	srand(time(NULL));
-	nbr = rand() % 400 + 1;
-	
-	return nbr;
-	 
-}
-
 /***********************************************
  *  Fonction permettant d'allouer un vecteur
  * @param taille: la taille du vecteur à allouer
@@ -60,7 +44,7 @@ VECTEUR remplir_vecteur(VECTEUR vect)
 
     for(i=0; i<vect.taille; i++)
     {
-    	printf("Indice %d = ", i);
+    	printf("vect[%d] = ", i);
        	scanf("%f", &nbr);
        	vect.tab_vect[i] = nbr;
     }
@@ -82,7 +66,8 @@ VECTEUR generer_vecteur_aleatoire(VECTEUR vect)
 
     for(i=0; i<vect.taille; i++)
     {
-       	vect.tab_vect[i] = generer_nombre_aleatoire();
+
+       	vect.tab_vect[i] = rand() % 400 + 1;
     }
     
     return vect;
@@ -190,7 +175,7 @@ MATRICE_CARREE remplir_matrice(MATRICE_CARREE mat)
     {
         for(j=0; j<mat.taille; j++)
         {
-			printf("Indice %d = ", i);
+			printf("mat[%d][%d] = ", i,j);
 			scanf("%f", &nbr);
             mat.tab_mat[i][j] = nbr;
         }
@@ -215,7 +200,7 @@ MATRICE_CARREE generer_matrice_aleatoire(MATRICE_CARREE mat)
     {
         for(j=0; j<mat.taille; j++)
         {
-            mat.tab_mat[i][j] = generer_nombre_aleatoire();
+            mat.tab_mat[i][j] = rand() % 400 + 1; 
         }
     }
     
@@ -274,6 +259,7 @@ void desallouer_matrice_carree(MATRICE_CARREE mat)
  *                          LA PARTIE PARALLELE
  *
  * ********************************************************************/
+
 
 
 /************************************************************
