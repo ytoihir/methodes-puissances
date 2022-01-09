@@ -310,8 +310,8 @@ float methodes_puissances(MATRICE_CARREE mat, VECTEUR vect, int n)
         // initialisation
         vect = initialiser_vecteur(vect);
         
-        for (k=0; k<convergence; k++)
-        {
+        //for (k=0; k<convergence; k++)
+        //{
             vectRetour.tab_vect = (float*)malloc(vect.taille*sizeof(float));
             vectRes = multiplier_mat_vect(mat, vect, vectRetour);
             vectRes = multiplier_vect_scal(vectRes, 1/m, vectRetour);
@@ -321,7 +321,7 @@ float methodes_puissances(MATRICE_CARREE mat, VECTEUR vect, int n)
             else convergence++;
             mBis = m;
             vectRetour = allouer_vecteur(vectRetour.taille);
-        }
+        //}
     }    
 
     return m;
@@ -630,7 +630,7 @@ bool tester_fct_methodes_puissances()
     vect.tab_vect[2]=0;
 
 	valeur_propre_obtenue = methodes_puissances(mat, vect, mat.taille);
-	printf("valeur propre obtenue : %.2f\nvaluer propre attendue : %.2f\n", valeur_propre_obtenue, valeur_propre_attendue);
+	printf("valeur propre obtenue : %.2f\nvaleur propre attendue : %.2f\n", valeur_propre_obtenue, valeur_propre_attendue);
     
     desallouer_matrice_carree(mat);
 	desallouer_vecteur(vect);
