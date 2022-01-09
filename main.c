@@ -1,10 +1,15 @@
 #include "GHANNOUMJihad-TOIHIRYoa_codeSourcePUISS.h"
 
+
+/*********************************************************
+ *  Fonction permettant d'afficher un menu dans la console
+ * ******************************************************/
 void menu()
 {
     MATRICE_CARREE mat;
 	VECTEUR vect;
 	int option, option2;
+	
 	do
 	{
 		printf("MENU :\n");
@@ -53,20 +58,20 @@ void menu()
 				if (vect.taille != -1)
 				{
 					printf("1) Remplir le vecteur manuellement\n");
-					printf("2) Remplir le vecteur à l'aide de MatrixMarket\n");
+					printf("2) Remplir le vecteur aléatoirement\n");
 					printf("Appuyez sur n'importe quelle touche pour retourner à l'étape précédente\n");
 					printf("Choissisez une option : ");
 					scanf("%d", &option2);
 					switch(option2)
 					{
 						case 1:
-							vect.tab_vect = (float*)malloc(mat.taille*sizeof(float));
+							vect = allouer_vecteur(vect.taille);
     						remplir_vecteur(vect);
     						afficher_vecteur(vect);
     						break;
 
     					case 2:
-    						printf("MatrixMarket\n");
+    						printf("Aléatoire\n");
     						break;
 
     					default:
