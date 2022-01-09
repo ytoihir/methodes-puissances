@@ -23,12 +23,97 @@ float generer_nombre_aleatoire()
 }
 
 /***********************************************
+ *  Fonction permettant d'allouer un vecteur
+ * @param taille: la taille du vecteur à allouer
+ * ********************************************/
+
+VECTEUR allouer_vecteur(int taille)
+{
+	VECTEUR vect;
+	
+	vect.taille = taille;
+	
+	vect.tab_vect = (float*) malloc(sizeof(float) * vect.taille);
+	
+	if (vect.tab_vect == NULL)
+	{
+		exit(EXIT_FAILURE);
+	}
+	
+	return vect;
+}
+
+/*********************************************************
+ *  Fonction permettant de remplir un vecteur manuellement
+ * @param vect: vecteur à remplir
+ * ******************************************************/
+
+VECTEUR remplir_vecteur(VECTEUR vect)
+{
+    int i;
+    float nbr;
+    
+    if (vect.tab_vect == NULL)
+	{
+		exit(EXIT_FAILURE);
+	}
+
+    for(i=0; i<vect.taille; i++)
+    {
+    	printf("Indice %d = ", i);
+       	scanf("%f", &nbr);
+       	vect.tab_vect[i] = nbr;
+    }
+    return vect;
+}
+
+/**********************************************************
+ *  Fonction permettant de remplir un vecteur aléatoirement
+ * *******************************************************/
+
+VECTEUR generer_vecteur_aleatoire(VECTEUR vect)
+{
+    int i;
+    
+    if (vect.tab_vect == NULL)
+	{
+		exit(EXIT_FAILURE);
+	}
+
+    for(i=0; i<vect.taille; i++)
+    {
+       	vect.tab_vect[i] = generer_nombre_aleatoire();
+    }
+    
+    return vect;
+}
+
+/*********************************************
+ *  Fonction permettant d'afficher un vecteur
+ * ******************************************/
+
+void afficher_vecteur(VECTEUR vect)
+{
+	int i;
+	
+	if (vect.tab_vect == NULL)
+	{
+		exit(EXIT_FAILURE);
+	}
+
+    for(i=0; i<vect.taille; i++)
+    {
+    	printf("vect.tab_vect[%d] = %lf\n",i, vect.tab_vect[i]);
+    }
+}
+
+/***********************************************
  *  Fonction permettant de normaliser un vecteur
  * @param vecteur: vecteur à normaliser
  * *********************************************/
 
- float normaliser_vecteur(VECTEUR vect)
- {
+float normaliser_vecteur(VECTEUR vect)
+{
 	float somme;
 	int i;
 	 
@@ -40,6 +125,21 @@ float generer_nombre_aleatoire()
 	}
 	 
 	return sqrt(somme); 
+}
+
+/*********************************************
+ *  Fonction permettant de libérer un vecteur
+ * ******************************************/
+ 
+ void desallouer_vecteur(VECTEUR vect)
+ {
+	 if (vect.tab_vect == NULL)
+	 {
+		exit(EXIT_FAILURE);
+	 }	
+	 
+	 free(vect.tab_vect);
+	 
  }
  
 /**********************************************************************
@@ -88,24 +188,6 @@ MATRICE_CARREE remplir_matrice(MATRICE_CARREE mat)
     return mat;
 }
 
-/********************************************
- *  Fonction permettant de remplir un vecteur
- * *****************************************/
-
-VECTEUR remplir_vecteur(VECTEUR vect)
-{
-    int i;
-    float nbr;
-
-    for(i=0; i<vect.taille; i++)
-    {
-    	printf("Indice %d = ", i);
-       	scanf("%f", &nbr);
-       	vect.tab_vect[i] = nbr;
-    }
-    return vect;
-}
-
 /***********************************************************
  *  Fonction permettant de remplir une matrice aléatoirement
  * ********************************************************/
@@ -125,22 +207,6 @@ MATRICE_CARREE generer_matrice_aleatoire(MATRICE_CARREE mat)
     return mat;
 }
 
-/**********************************************************
- *  Fonction permettant de remplir un vecteur aléatoirement
- * *******************************************************/
-
-VECTEUR generer_vecteur_aleatoire(VECTEUR vect)
-{
-    int i;
-
-    for(i=0; i<vect.taille; i++)
-    {
-       	vect.tab_vect[i] = generer_nombre_aleatoire();
-    }
-    
-    return vect;
-}
-
 /*********************************************
  *  Fonction permettant d'afficher une matrice
  * ******************************************/
@@ -155,20 +221,6 @@ void afficher_matrice(MATRICE_CARREE mat)
         {
             printf("mat.tab_mat[%d][%d] = %lf\n",i,j, mat.tab_mat[i][j]);
         }
-    }
-}
-
-/*********************************************
- *  Fonction permettant d'afficher un vecteur
- * ******************************************/
-
-void afficher_vecteur(VECTEUR vect)
-{
-	int i;
-
-    for(i=0; i<vect.taille; i++)
-    {
-    	printf("vect.tab_vect[%d] = %lf\n",i, vect.tab_vect[i]);
     }
 }
 
