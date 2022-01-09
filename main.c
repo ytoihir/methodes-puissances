@@ -1,4 +1,4 @@
-#include "methodes_puissances.h"
+#include "GHANNOUMJihad-TOIHIRYoa_codeSourcePUISS.h"
 
 void menu()
 {
