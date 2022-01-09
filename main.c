@@ -1,13 +1,12 @@
 #include "GHANNOUMJihad-TOIHIRYoa_codeSourcePUISS.h"
 
-MATRICE_CARREE mat;
-VECTEUR vect;
 
 /*********************************************************
  *  Fonction permettant d'afficher un menu dans la console
  * ******************************************************/
-void menu()
+void menu(MATRICE_CARREE mat, VECTEUR vect)
 {
+
 	int option, option2;
 	
 	do
@@ -33,13 +32,16 @@ void menu()
 				switch(option2)
 				{
 					case 1:
-    					mat = allouer_matrice_carree(mat.taille);
+						mat = allouer_matrice_carree(mat.taille);
     					remplir_matrice(mat);
     					afficher_matrice(mat);
+    					
     					break;
 
 					case 2:
-						printf("MatrixMarket\n");
+						mat = allouer_matrice_carree(mat.taille);
+						generer_matrice_aleatoire(mat);
+						afficher_matrice(mat);
 						break;
 
 					default:
@@ -71,7 +73,9 @@ void menu()
     						break;
 
     					case 2:
-    						printf("Aléatoire\n");
+							vect = allouer_vecteur(vect.taille);
+    						generer_vecteur_aleatoire(vect);
+    						afficher_vecteur(vect);
     						break;
 
     					default:
@@ -79,6 +83,10 @@ void menu()
 							break;
 					}
 				}
+				break;
+				
+				
+			case 3:
 				break;
 		}
 
@@ -90,12 +98,6 @@ void menu()
  *  Fonction permettant de mesurer la performance
  * @param res : le resultat de la fct methodes_puissances
  * *****************************************************/
-
-/********************************************************
- *  Fonction permettant de mesurer la performance
- * @param res : le resultat de la fct methodes_puissances
- * *****************************************************/
-
 void plot_graphe(MATRICE_CARREE mat, VECTEUR vect)
 {
 	NB_THREADS = 1;
@@ -120,14 +122,29 @@ void plot_graphe(MATRICE_CARREE mat, VECTEUR vect)
 
 int main()
 {
-	menu();
-    
-	//plot_graphe(mat, vect);
 
+	MATRICE_CARREE mat;
+    VECTEUR vect;
+    float valeur_propre = 0;
+	
+
+	NB_THREADS = 1;
+	
+	/*afficher le menu*/
+	menu(mat, vect);
+	
+	valeur_propre = methodes_puissances(mat, vect, mat.taille);
+	printf("La valeur propre est: %f\n", valeur_propre);
+
+	//plot_graphe(mat, vect);
+	
+	//Tests
+	/*
 	printf("Test de la fonction multiplier matxvect = %d\n", tester_fct_multiplier_mat_vect());
     printf("Test de la fonction composante max = %d\n", tester_fct_calculer_val_max());
     printf("Test de la fonction multipler vectxscalaire = %d\n", tester_fct_multiplier_vect_scal());
     printf("Test de la fonction méthodes des puissances = %d\n", tester_fct_methodes_puissances());
+	*/
 	
 	desallouer_matrice_carree(mat);
 	desallouer_vecteur(vect);
