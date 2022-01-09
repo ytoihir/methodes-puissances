@@ -416,7 +416,7 @@ VECTEUR initialiser_vecteur(VECTEUR vect)
 	// normaliser le vecteur initial vect
 	float vectNormalise = normaliser_vecteur(vect);
 	
-	if (vect.tab_vect == NULL || vectRes.tab_vect == NULL)
+	if (vect.tab_vect == NULL)
 	{
 		exit(EXIT_FAILURE);
 	}
