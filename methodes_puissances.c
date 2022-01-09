@@ -29,22 +29,17 @@ float generer_nombre_aleatoire()
 
  float normaliser_vecteur(VECTEUR vect)
  {
-	 float somme;
-	 int i;
+	float somme;
+	int i;
 	 
-	 omp_set_num_threads(NB_THREADS);
-	 #pragma omp parallel 
-	 {
-	     #pragma omp for reduction(+: somme)
-		 for(i = 0; i < vect.taille; i++)
-		 {
-			 somme = somme + (vect.tab_vect[i] * vect.tab_vect[i]);
-		 }
-	 }
+	omp_set_num_threads(NB_THREADS);
+	#pragma omp shared(somme) for reduction(+: somme)
+	for(i = 0; i < vect.taille; i++)
+	{
+		somme = somme + (vect.tab_vect[i] * vect.tab_vect[i]);
+	}
 	 
-	 return sqrt(somme);
-	 
-	 
+	return sqrt(somme); 
  }
  
 /**********************************************************************
